@@ -1,10 +1,13 @@
-/**app.wxss**/
-.container {
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 200rpx 0;
+@import "./styles/iconfont.wxss";
+/* 初始化 */
+page, view, text, swiper, swiper-item, image, navigator{
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
-} 
+}
+
+/*theme color*/
+page{
+  --themeColor:#f1c061;
+  font-size: 28rpx;
+}

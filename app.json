@@ -5,18 +5,17 @@
     "pages/message/message",
     "pages/mine/mine",
     "pages/add/add"
-
   ],
   "window":{
     "backgroundTextStyle":"dark",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "xixixi",
-    "navigationBarTextStyle":"black",
+    "navigationBarBackgroundColor": "#f1c061",
+    "navigationBarTitleText": "拼团",
+    "navigationBarTextStyle":"white",
     "enablePullDownRefresh": true
   },
   "tabBar": {
     "color": "#000000",
-    "selectedColor": "#ffcc66",
+    "selectedColor": "#f1c061",
     "list": [{
       "pagePath": "pages/index/index",
       "text": "首页",
