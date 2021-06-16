@@ -42,7 +42,7 @@
   "compileType": "miniprogram",
   "libVersion": "2.0.4",
   "appid": "wx95bf8e473873b65d",
-  "projectname": "miniprogram-1",
+  "projectname": "FoodDelivery",
   "debugOptions": {
     "hidedInDevtools": []
   },
