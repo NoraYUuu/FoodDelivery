@@ -1,50 +1,53 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
     "pages/collection/collection",
     "pages/message/message",
     "pages/mine/mine",
-    "pages/add/add"
+    "pages/add/add",
+    "pages/login/login"
   ],
-  "window":{
-    "backgroundTextStyle":"dark",
-    "navigationBarBackgroundColor": "#f1c061",
-    "navigationBarTitleText": "拼团",
-    "navigationBarTextStyle":"white",
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "xixixi",
+    "navigationBarTextStyle": "black",
     "enablePullDownRefresh": true
   },
   "tabBar": {
     "color": "#000000",
-    "selectedColor": "#f1c061",
-    "list": [{
-      "pagePath": "pages/index/index",
-      "text": "首页",
-      "iconPath": "icons/sousuo.png",
-      "selectedIconPath": "icons/sousuo_active.png"
-    },
-    {
-      "pagePath": "pages/collection/collection",
-      "text": "收藏",
-      "iconPath": "icons/xihuan.png",
-      "selectedIconPath": "icons/xihuan_active.png"
-    },
-    {"pagePath": "pages/add/add",
-      "iconPath": "icons/jia.png",
-      "selectedIconPath": "icons/jia.png"
-    }, 
-    {
-      "pagePath": "pages/message/message",
-      "text": "消息",
-      "iconPath": "icons/xiaoxi.png",
-      "selectedIconPath": "icons/xiaoxi_active.png"
-    },
-    {
-      "pagePath": "pages/mine/mine",
-      "text": "我的",
-      "iconPath": "icons/wode.png",
-      "selectedIconPath": "icons/wode_active.png"
-    }
-  ]
+    "selectedColor": "#ffcc66",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "icons/sousuo.png",
+        "selectedIconPath": "icons/sousuo_active.png"
+      },
+      {
+        "pagePath": "pages/collection/collection",
+        "text": "收藏",
+        "iconPath": "icons/xihuan.png",
+        "selectedIconPath": "icons/xihuan_active.png"
+      },
+      {
+        "pagePath": "pages/add/add",
+        "iconPath": "icons/jia.png",
+        "selectedIconPath": "icons/jia.png"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "消息",
+        "iconPath": "icons/xiaoxi.png",
+        "selectedIconPath": "icons/xiaoxi_active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "icons/wode.png",
+        "selectedIconPath": "icons/wode_active.png"
+      }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
