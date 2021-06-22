@@ -1,2 +1,46 @@
-<!--pages/add/add.wxml-->
-<text>pages/add/add.wxml</text>
+<Select id="selectt"></Select>
+
+
+<view>
+  <!-- Begin Search-->
+  <Search data-content = "选择餐厅"></Search>
+  <!-- End Search-->
+</view>
+
+<view class="rImg">
+  <image class="rImg" mode="aspectFit"  src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F17026bfe5d56794fff418a40195862b54c8f39ef46b2d-etk3LH_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626946341&t=f4a3beba6fc6a630f9a8eeca5b18ce03" />
+</view>
+
+<view class="page-section">
+    <view class="title">联系方式</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <input class="weui-input" type="number" maxlength="8" minlength="8" placeholder="请输入电话号码" bindinput="contactInput"/>
+      </view>
+    </view>
+  </view>
+
+  <view class="page-section">
+    <view class="title">领餐地址</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <input class="weui-input" maxlength="50" placeholder="请输入领餐地址" bindinput="locationInput"/>
+      </view>
+    </view>
+  </view>
+
+  <view class="page-section">
+    <view class="title">外卖费总额</view>
+    <view class="weui-cells weui-cells_after-title">
+  <picker  mode="multiSelector" bindchange="bindMultiPickerChange" value="{{multiIndex}}" range="{{multiArray}}">
+    <view class="picker">
+      <text class="chooseAmount">选择金额：</text> 
+      {{multiArray[0][multiIndex[0]]}}.{{multiArray[1][multiIndex[1]]}}{{multiArray[2][multiIndex[2]]}}
+    </view>
+  </picker>
+  </view>
+</view>
+
+<view>
+<button class="confirm" bindtap="bindConfirmListener">确认</button>
+</view>

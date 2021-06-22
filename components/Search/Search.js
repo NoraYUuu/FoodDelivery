@@ -1,5 +1,13 @@
 // components/Search/Search.js
+
 Component({
+
+    attached: function() {
+      const c = this.dataset.content;
+      this.setData({
+        searchContent: c
+      });
+    },
   /**
    * Component properties
    */
@@ -11,13 +19,15 @@ Component({
    * Component initial data
    */
   data: {
-
+    searchContent:""
   },
 
   /**
    * Component methods
    */
   methods: {
-
+  
+    
+    
   }
 })

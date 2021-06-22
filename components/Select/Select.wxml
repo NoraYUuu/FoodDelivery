@@ -1,0 +1,19 @@
+<!-- tab栏flex布局 -->
+<view class="cxj-menu">
+  <view class="flex-view{{item.active?' active':''}}" wx:for="{{tabTxt}}" data-index="{{index}}" bindtap="{{item.index != 2 ? 'filterTab' : 'bindPickerTime'}}">
+    <text>{{item.text}}</text>
+    <image src="{{item.index != 2 ? '../../icons/xiala.png' : null}}" class="cxj-icon"></image>
+  </view>
+  <!-- <view class="flex-view{{item.active?' active':''}}" bindtap="bindPickerTime" > -->
+    <view class="flex-view{{item.active?' active':''}}">
+    <picker mode="time" value="{{time}}" bindchange="bindTimeChange">
+    <view class="picker">
+      截止时间:{{time}}
+    </view>
+  </picker>
+  </view>
+</view>
+<!-- tab下拉选项布局 -->
+<view class="cxj-tab-layout" hidden="{{!item.active}}" wx:for="{{tabTxt}}"  wx:for-item="item" data-index="{{index}}" bindtap="filterTabChild">
+    <view class="{{item.type==item_child.id?'active':''}} " wx:for="{{item.child}}" wx:for-item="item_child"  data-id="{{item_child.id}}" data-index="0" data-txt="{{item_child.text}}">{{item_child.text}}</view>
+</view>

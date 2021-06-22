@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "Search": "../../components/Search/Search",
+    "Select": "../../components/Select/Select"
+  }
 }

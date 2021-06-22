@@ -1,5 +1,5 @@
 <view class = "FD_index">
   <!-- Begin Search-->
-  <Search></Search>
+  <Search data-content = "搜索"></Search>
   <!-- End Search-->
 </view>
