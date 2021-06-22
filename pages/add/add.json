@@ -2,5 +2,6 @@
   "usingComponents": {
     "Search": "../../components/Search/Search",
     "Select": "../../components/Select/Select"
-  }
+  },
+  "navigationBarTitleText": "发起拼团"
 }
