@@ -57,8 +57,10 @@
                 <text>意见反馈</text>
                 <text>xxxxxxxx@gmail.com</text>
             </view>
-            <view class="app_info_item">关于我们</view>
+            <navigator>
+                <view class="app_info_item">关于我们</view>
+            </navigator>
         </view>
-        <view class="recommend_wrap">把应用推荐给其他人</view>
+        <button class="share" type="default" open-type="share">把应用推荐给其他人</button>
     </view>
 </view>

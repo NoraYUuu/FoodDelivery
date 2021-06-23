@@ -12,8 +12,24 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
+
+    if (!wx.cloud) {
+      console.error('cloud not working')
+    } else {
+      wx.cloud.init({
+        env: 'cloud1-1gcwirla84b05897',
+        traceUser: true
+      })
+    }
+    this.globalData = {}
+    // 云环境id
   },
-  globalData: {
+
+  /* globalData: {
     userInfo: null
-  }
+  }, 
+  to test cloud environment
+  */
+
+
 })

@@ -33,4 +33,5 @@
   color: white;
   background-color: var(--themeColor);
   border-radius: 25rpx;
+  margin-top: 40rpx;
 }
