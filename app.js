@@ -12,18 +12,24 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
+
     if (!wx.cloud) {
-      console.error('请使用 2.2.3 或以上的基础库以使用云能力')
+      console.error('cloud not working')
     } else {
       wx.cloud.init({
         env: 'cloud1-1gcwirla84b05897',
-        traceUser: true,
+        traceUser: true
       })
     }
-
     this.globalData = {}
+    // 云环境id
   },
-  globalData: {
+
+  /* globalData: {
     userInfo: null
-  }
+  }, 
+  to test cloud environment
+  */
+
+
 })
