@@ -127,6 +127,43 @@ Component({
     this.setData({
       time: e.detail.value,
     })
+  },
+
+  clear: function(){
+      this.setData({
+          time: '12:01',
+          tabTxt: [
+            {
+                'index': 0,
+                'text': '人数',
+                'originalText': '人数',
+                'active': false,
+                'child': [
+                    { 'id': 0, 'text': '不限' },
+                    { 'id': 1, 'text': '2' },
+                    { 'id': 2, 'text': '3' },
+                    { 'id': 3, 'text': '4' },
+                    { 'id': 4, 'text': '5' },
+                    { 'id': 5, 'text': '6' }
+                ],
+                'type': 0
+            },
+            {
+                'text': '地点',
+                'index': 1,
+                'originalText': '地点',
+                'active': false,
+                'child': [
+                    { 'id': 0, 'text': '不限' },
+                    {'id': 1, 'text': "PGP" },
+                    {'id': 2, 'text': "UTown" },
+                    {'id': 3, 'text': "SOC" },
+                    {'id': 4, 'text': "FOS" }
+                ], 'type': 0
+            }
+        ],
+        searchParam: []
+      })
   }
 
   }
