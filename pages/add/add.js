@@ -93,6 +93,7 @@ Page({
       const db = wx.cloud.database()
       db.collection('tasks').add({
         data:{
+          restaurant: '餐厅名字',
           dLocation: this.data.location,
           price: this.data.multiIndex,
           contact: this.data.contact,

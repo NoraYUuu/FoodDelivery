@@ -1,2 +1,15 @@
-<!--pages/collection/collection.wxml-->
-<text>pages/collection/collection.wxml</text>
+<view>
+  <!-- Begin Search-->
+  <Search data-content = "搜索"></Search>
+  <!-- End Search-->
+</view>
+
+<view wx:for="{{info.details}}" wx:key="key" class="forItemBorder">
+	<view class="weui-cell weui-cell_input ">
+		<view class="weui-cell__hd">
+			<view class="weui-label rui-justify">
+				<text space="ensp">途 径 地</text>
+			</view>
+		</view>
+	</view>
+</view>

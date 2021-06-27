@@ -1,6 +1,5 @@
 <Select id="selectt"></Select>
 
-
 <view>
   <!-- Begin Search-->
   <Search data-content = "选择餐厅"></Search>

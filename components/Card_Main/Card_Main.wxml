@@ -1,0 +1,8 @@
+<view class="card">
+  <view class="img">
+    <image src="https://res.wx.qq.com/wxdoc/dist/assets/img/0.4cb08bb4.jpg" mode="aspectFit"></image>
+  </view>
+  <view class="title">{{resName}}</view>
+  <text class="inline"> 截止时间: {{deadline}}</text>
+  <text class="inline"> 人数: {{numOfPpl}}</text>
+</view> 

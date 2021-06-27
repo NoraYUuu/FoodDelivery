@@ -30,5 +30,10 @@
     </swiper>
   </view>
   <!-- 轮播图 结束 -->
+</view>
 
+<view class='a' wx:for="{{allTask}}"><!--wx:for是微信数据绑定的一种方式，该数组有多少数据就显示多少个view-->
+    <!--index为每个数据对应的下标-->
+    <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
+    data-restaurant="{{item.restaurant}}"></card>
 </view>

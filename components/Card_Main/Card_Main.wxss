@@ -1,0 +1,32 @@
+.card{
+  width: 96%;
+  margin-left: 1.5%;
+  height: 150rpx;
+  /* background: var(--themeColor); */
+  /* background: rgb(255,221,153); */
+  background: rgb(255,230,179);
+  border-radius: 10rpx;
+  box-shadow: 5px 5px 5px #cdcfcf;
+  margin-top: 2%;
+  /* float: left; */
+ }
+ .title{
+   color: rgb(141,94,0);
+   padding: 40rpx 20rpx 0rpx 280rpx;
+   font-size: large;
+ }
+ .inline{
+   padding: 30rpx 10rpx 40rpx 100rpx;
+   color: rgb(141,94,0);
+ }
+
+.img{
+  width: 120rpx;
+  height: 120rpx;
+  /* display: inline-block; */
+  position: relative;
+  top: -110%;
+  left: 5%;
+  float: left;
+}
+
