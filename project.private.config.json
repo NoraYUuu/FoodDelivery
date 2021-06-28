@@ -23,6 +23,18 @@
           "pathName": "pages/add/add",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "聊天室",
+          "pathName": "pages/chatroom/chatroom",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "消息列表",
+          "pathName": "pages/message/message",
+          "query": "",
+          "scene": null
         }
       ]
     }

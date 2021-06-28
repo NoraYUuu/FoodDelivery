@@ -1,2 +1,25 @@
-<!--pages/message/message.wxml-->
-<text>pages/message/message.wxml</text>
+<!-- <view class="chat_title">
+    <text>聊天</text>
+</view> -->
+<scroll-view scroll-y="true" class="chat_list_wrapper">
+    <view class="search" wx:if="{{ search_btn }}">
+        <view bindtap="openSearch">
+            <text>搜索</text>
+            <!-- 因为不需要进入新网页，所以没有使用 搜索 组件 -->
+        </view>
+    </view>
+    <view class="search_input" wx:if="{{ search_chats }}">
+        <view>
+            <input placeholder="搜索" placeholder-style="color:#9B9B9B;line-height:21px;font-size:15px;" auto-focus confirm-type="search" type='text' bindconfirm="onSearch" bindinput="onInput" value="{{input_code}}"></input>
+        </view>
+        <text bindtap="cancel">取消</text>
+    </view>
+    <navigator url="/pages/chatroom/chatroom">
+        <view class="test">test to chatroom</view>
+    </navigator>
+    <!-- 插入遍历消息入口 -->
+    <!-- <view wx:if="{{arr.length == 0}}" class="chat_noChat">
+	当前没有历史聊天，添加一个好友开始聊天吧
+    </view> -->
+    <view class="chat_noChat">当前没有历史聊天，添加一个好友开始聊天吧~</view>
+</scroll-view>

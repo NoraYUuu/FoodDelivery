@@ -1,66 +1,50 @@
-// pages/message/message.js
 Page({
+	data: {
+		search_btn: true,
+		search_chats: false,
+		show_mask: false,
+		yourname: "",
+		unReadSpotNum: 0,
+		unReadNoticeNum: 0,
+		messageNum: 0,
+		unReadTotalNotNum: 0,
+		arr: [],
+		show_clear: false,
+		groupName: {}
+	},
 
-  /**
-   * Page initial data
-   */
-  data: {
+	openSearch: function () {
+		this.setData({
+			search_btn: false,
+			search_chats: true,
+			gotop: true
+		});
+	},
 
-  },
 
-  /**
-   * Lifecycle function--Called when page load
-   */
-  onLoad: function (options) {
+	cancel: function () {
+		/* this.getChatList() */
+		this.setData({
+			search_btn: true,
+			search_chats: false,
+			//arr: this.getChatList(),
+			/* unReadSpotNum: getApp().globalData.unReadMessageNum > 99 ? '99+' : getApp().globalData.unReadMessageNum, */
+			gotop: false
+		});
+	},
 
-  },
+	clearInput: function () {
+		this.setData({
+			input_code: '',
+			show_clear: false
+		})
+	},
 
-  /**
-   * Lifecycle function--Called when page is initially rendered
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page show
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page hide
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page unload
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * Page event handler function--Called when user drop down
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * Called when page reach bottom
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * Called when user click on the top right corner to share
-   */
-  onShareAppMessage: function () {
-
-  }
+	close_mask: function () {
+		this.setData({
+			search_btn: true,
+			search_chats: false,
+			show_mask: false
+		});
+	}
 })
