@@ -3,8 +3,11 @@
   <Search data-content = "搜索"></Search>
   <!-- End Search-->
 </view>
-
-<view wx:for="{{info.details}}" wx:key="key" class="forItemBorder">
+<view class='a' wx:for="{{allCollections}}">
+    <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
+    data-restaurant="{{item.restaurant}}"></card>
+</view>
+<!-- <view wx:for="{{info.details}}" wx:key="key" class="forItemBorder">
 	<view class="weui-cell weui-cell_input ">
 		<view class="weui-cell__hd">
 			<view class="weui-label rui-justify">
@@ -12,4 +15,4 @@
 			</view>
 		</view>
 	</view>
-</view>
+</view> -->

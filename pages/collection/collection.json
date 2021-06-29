@@ -1,4 +1,8 @@
 {
-  "usingComponents": {"Search": "../../components/Search/Search"},
+  "usingComponents": {
+    "Search": "../../components/Search/Search",
+    "card":"../../components/Card_Main/Card_Main"
+  },
+
   "navigationBarTitleText": "我的收藏"
 }
