@@ -57,5 +57,26 @@ getTask() {
 },
 onPullDownRefresh(){
   this.getTask();
+},
+
+showDetail(e){
+  db.collection('tasks').doc(e.currentTarget.dataset.myid).get({
+    success: function(res) {
+      // res.data 包含该记录的数据
+      const task = res.data
+      child.setData({
+        show: true,
+        location: task.location,
+        dLocation: task.dLocation,
+        deadline: task.deadline,
+        numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
+        price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
+        restaurant: task.restaurant
+      })
+      console.log(task)
+    }
+  })
+  const child = this.selectComponent(".popWindow")
+  
 }
 })

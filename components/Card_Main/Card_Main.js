@@ -7,10 +7,12 @@ Component({
     const r = this.dataset.restaurant;
     const d = this.dataset.deadline;
     const n = this.dataset.numberofpeople;
+    const id = this.dataset.myid;
     this.setData({
       resName:r,
       deadline:d,
-      numOfPpl: n
+      numOfPpl: n,
+      id: id
     });
   },
   properties: {
@@ -23,7 +25,8 @@ Component({
   data: {
     resName:'',
     deadline:'',
-    numOfPpl:''
+    numOfPpl:'',
+    id:''
   },
 
   /**

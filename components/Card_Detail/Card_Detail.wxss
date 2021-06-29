@@ -1,0 +1,65 @@
+@import "../../lib/weui.wxss";
+/* 遮罩层 */
+.mask{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 9000;
+    opacity: 0.5;
+}
+ 
+/* 弹出层 */
+.modalDlg{
+    width: 90%;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius:5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 弹出层里面的图片 */
+.modalDlg image{
+  width: 120px;
+  height: 120px;
+  margin-top: 30px;
+}
+
+/* 弹出层里面的按钮 */
+.ok{
+  display: inline-block;
+  width: 80px;
+  height: 35px;
+  background: var(--themeColor);
+  line-height: 35px;
+  text-align: center;
+  color: #fff;
+  font-size: 15px;
+  margin:10px auto;
+  border-radius: 100px;
+}
+
+/* 弹出层里面的文字 */
+.text{
+  text-align: justify;
+  font-size: 30rpx;
+  color: #666;
+  
+  margin-top: 10px;
+}
+
+.title{
+  text-align: justify;
+  margin-top: 10px;
+  width: 180rpx;
+  font-size: 28rpx;
+}
