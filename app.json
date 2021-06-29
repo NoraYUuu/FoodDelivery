@@ -2,11 +2,12 @@
   "pages": [
     "pages/index/index",
     "pages/collection/collection",
-    "pages/message/message",
     "pages/mine/mine",
     "pages/add/add",
     "pages/login/login",
-    "pages/search/index"
+    "pages/search/index",
+    "pages/message/message",
+    "pages/chatroom/chatroom"
   ],
   "window": {
     "backgroundTextStyle": "dark",
