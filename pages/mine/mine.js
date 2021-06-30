@@ -1,13 +1,17 @@
 // pages/mine/mine.js
+let app = getApp();
+
+
 Page({
   data: {
     userinfo: {}
   },
 
   onShow() {
-    const userinfo = wx.getStorageSync("userinfo");
-    /* 后期需将userinfo改为全局globalData */
-    this.setData({ userinfo })
+    const userinfo = wx.getStorageSync("userinfo")
+    this.setData({
+      userinfo: userinfo
+    })
   }
 
 })

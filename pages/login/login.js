@@ -1,5 +1,5 @@
 // pages/login/login.js
-
+let app = getApp();
 
 Page({
   /*   data: {
@@ -24,8 +24,10 @@ Page({
     }, */
 
   handleGetUserInfo(e) {
-    console.log(e)
+    //console.log(e)
     const { userInfo } = e.detail; // or just e.detail
+    //app.globalData.userInfo = e.detail.userInfo;
+    //console.log(app.globalData.userInfo);
     const db = wx.cloud.database()
     db.collection('testDatabase').add({
       data: {

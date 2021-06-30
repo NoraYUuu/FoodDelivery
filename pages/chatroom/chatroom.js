@@ -1,7 +1,9 @@
 // pages/chat/chat.js
 /* var websocket = require('../../utils/websocket.js');
 var utils = require('../../utils/util.js'); */
-let goEasy = getApp().globalData.goEasy;
+
+let app = getApp();
+let goEasy = app.globalData.goEasy;
 let pubSub = goEasy.pubsub;
 
 Page({
@@ -10,7 +12,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    newslist: [],
+    newslist: [{ "date": "16:14 30/06/01", "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132", "nickName": "微信用户", "type": "text", "content": "人工写的，你发不出来的" },
+    { "date": "16:17 30/06/01", "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132", "nickName": "123", "type": "text", "content": "呜呜呜好难" }],
     userInfo: {},
     scrollTop: 0,
     increase: false,//图片添加区域隐藏
@@ -18,6 +21,7 @@ Page({
     previewImgList: [],
 
     message: "",
+    //to store the most updated msg
     messages: [] // used in goEasy
 
   },
@@ -61,14 +65,30 @@ Page({
 
   sendMessage: function () {
     var self = this;
-    var content = this.data.message;
+    var content = self.data.message;
     if (content.trim() != '') {
       //发送消息
       pubSub.publish({
         channel: "my_channel",
-        message: self.data.message,
+        message: content,
+
         onSuccess: function () {
+          //console.log('message sent: ' + JSON.parse(content));
+          var list = [];
+          list = self.data.newslist;
+          var newMsg = {};
+          var showTime = app.formatDate(new Date());
+          newMsg = {
+            "nickName": self.data.userInfo.nickName,
+            "date": showTime,
+            "avatarUrl": self.data.userInfo.avatarUrl,
+            "type": "text",
+            "content": self.data.message
+          }
+
+          list.push(newMsg);
           self.setData({
+            newslist: list,
             message: ''
           });
           console.log("send message success");
@@ -76,15 +96,20 @@ Page({
         onFailed: function (err) {
           self.unshiftMessage("消息发送失败，错误编码：" + err.code + "错误信息：" + err.content);
         }
-      });
+      })
+    } else {
+      wx.showToast({
+        title: '消息不能为空哦~',
+        duration: 2000
+      })
     }
   },
 
   unshiftMessage(content) {
-    var formattedTime = new Date().formatDate("hh:mm");
+    var formattedTime = app.formatDate(new Date());
     var message = formattedTime + " " + content;
     var messages = this.data.messages;
-    messages.unshift(message);
+    messages.push(message);
     this.setData({
       messages: messages
     })

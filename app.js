@@ -13,7 +13,7 @@ App({
   //新增globalData
 
   onLaunch: function () {
-    this.extendDateFormat();
+    //this.extendDateFormat();
     //建立连接
     this.globalData.goEasy.connect({
       onSuccess: function () {
@@ -64,26 +64,17 @@ App({
   }, 
   to test cloud environment
   */
-  extendDateFormat() {
-    Date.prototype.formatDate = function (fmt) {
-      var o = {
-        "M+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "m+": this.getMinutes(),
-        "s+": this.getSeconds(),
-        "q+": Math.floor((this.getMonth() + 3) / 3),
-        "S": this.getMilliseconds()
-      };
-      if (/(y+)/.test(fmt))
-        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-      for (var k in o)
-        if (o.hasOwnProperty(k)) {
-          if (new RegExp("(" + k + ")").test(fmt))
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        }
-      return fmt;
-    };
-  }
+  formatDate: function (time) {
+    const date = new Date(time);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    return [month, day].map(this.formatNumber).join('-') + ' ' + [hour, minute].map(this.formatNumber).join(':');
+  },
+  formatNumber: function (n) {
+    n = n.toString();
+    return n[1] ? n : '0' + n;
+  },
 
 })
