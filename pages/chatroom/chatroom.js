@@ -1,6 +1,9 @@
 // pages/chat/chat.js
-var websocket = require('../../utils/websocket.js');
-var utils = require('../../utils/util.js');
+/* var websocket = require('../../utils/websocket.js');
+var utils = require('../../utils/util.js'); */
+let goEasy = getApp().globalData.goEasy;
+let pubSub = goEasy.pubsub;
+
 Page({
 
   /**
@@ -12,8 +15,11 @@ Page({
     scrollTop: 0,
     increase: false,//图片添加区域隐藏
     aniStyle: true,//动画效果
+    previewImgList: [],
+
     message: "",
-    previewImgList: []
+    messages: [] // used in goEasy
+
   },
   /**
    * 生命周期函数--监听页面加载
@@ -26,8 +32,10 @@ Page({
   },
 
   onLoad: function () {
+    var self = this;
+
     //调通接口
-    websocket.connect(this.data.userInfo, function (res) {
+    /* websocket.connect(this.data.userInfo, function (res) {
       // console.log(JSON.parse(res.data))
       var list = []
       list = that.data.newslist
@@ -35,17 +43,65 @@ Page({
       that.setData({
         newslist: list
       })
+    }) */
+    pubSub.subscribe({
+      channel: "my_channel",
+      onMessage: function (msg) {
+        self.unshiftMessage(msg.content);
+      },
+      onSuccess: function () {
+        self.unshiftMessage('订阅成功。');
+      },
+      onFailed: function (err) {
+        self.unshiftMessage("订阅失败，错误编码：" + err.code + "错误信息：" + err.content);
+      }
+    });
+  },
+  //GoEasy
+
+  sendMessage: function () {
+    var self = this;
+    var content = this.data.message;
+    if (content.trim() != '') {
+      //发送消息
+      pubSub.publish({
+        channel: "my_channel",
+        message: self.data.message,
+        onSuccess: function () {
+          self.setData({
+            message: ''
+          });
+          console.log("send message success");
+        },
+        onFailed: function (err) {
+          self.unshiftMessage("消息发送失败，错误编码：" + err.code + "错误信息：" + err.content);
+        }
+      });
+    }
+  },
+
+  unshiftMessage(content) {
+    var formattedTime = new Date().formatDate("hh:mm");
+    var message = formattedTime + " " + content;
+    var messages = this.data.messages;
+    messages.unshift(message);
+    this.setData({
+      messages: messages
     })
   },
+
+
+
+
   // 页面卸载
-  onUnload() {
+  /* onUnload() {
     wx.closeSocket();
     wx.showToast({
       title: '连接已断开~',
       icon: "none",
       duration: 2000
     })
-  },
+  }, */
   //事件处理函数
   send: function () {
     var flag = this
@@ -112,7 +168,7 @@ Page({
               that.setData({
                 increase: false
               })
-              websocket.send('{"images":"' + res.data + '","date":"' + utils.formatTime(new Date()) + '","type":"image","nickName":"' + that.data.userInfo.nickName + '","avatarUrl":"' + that.data.userInfo.avatarUrl + '"}')
+              websocket.send('{"images":"' + res.data + '","date":"' + utils.formatTime(new Date()) + '","type":"image","nickName":"' + this.data.userInfo.nickName + '","avatarUrl":"' + this.data.userInfo.avatarUrl + '"}')
               that.bottom()
             }
           }
