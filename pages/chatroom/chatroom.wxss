@@ -72,16 +72,27 @@ page {
     vertical-align: middle;
     margin-right: 10rpx;
   }
-  .new_txt {
+  .new_txt_self {
     max-width: 300rpx;
     display: inline-block;
     border-radius: 6rpx;  
     line-height: 60rpx;
-    background-color: #95d4ff;   
+    background-color: white;   
     padding: 5rpx 20rpx; 
     margin: 0 10rpx;
     margin-left: 50rpx;
   }  
+
+  .new_txt_others {
+    max-width: 300rpx;
+    display: inline-block;
+    border-radius: 6rpx;  
+    line-height: 60rpx;
+    background-color:var(--themeColor);   
+    padding: 5rpx 20rpx; 
+    margin: 0 10rpx;
+    margin-left: 50rpx;
+  } 
   .my_right .new_txt{
      margin-right:60rpx; 
   }
