@@ -21,12 +21,12 @@ Page({
       //如果查询成功的话    
       success: res => {
         //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值
-        console.log("what")
         this.setData({
           allCollections: res.data
         })
       }
     })
+    
   },
 
   onPullDownRefresh(){
@@ -51,7 +51,7 @@ Page({
    * Lifecycle function--Called when page show
    */
   onShow: function () {
-
+    this.getCollections();
   },
 
   /**

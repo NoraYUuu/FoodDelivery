@@ -4,11 +4,13 @@ const app = getApp()
 
 import { request } from "../../request/index.js";
 const db = wx.cloud.database({});
+
 Page({
   data: {
     // 轮播图数组
     swiperList: [],
     allTask: []
+
   },
   // 页面开始加载 就会触发
   onLoad: function (options) {
@@ -21,11 +23,11 @@ Page({
     //     })
     //   }
     // });
-    
-    this.getSwiperList();
+    wx.setStorageSync("name","haoyu")
+    this.getSwiperList()
     // this.getCateList();
     // this.getFloorList();
-    this.getTask();
+    this.getTask()
   },
 
   // 获取轮播图数据
@@ -48,7 +50,7 @@ getTask() {
   db.collection('tasks').get({
     //如果查询成功的话    
     success: res => {
-      //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值      
+      //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值     
       this.setData({
         allTask: res.data
       })
@@ -59,11 +61,14 @@ onPullDownRefresh(){
   this.getTask();
 },
 
+
 showDetail(e){
-  db.collection('tasks').doc(e.currentTarget.dataset.myid).get({
+  var my_id = e.currentTarget.dataset.myid
+  db.collection('tasks').doc(my_id).get({
     success: function(res) {
       // res.data 包含该记录的数据
       const task = res.data
+
       child.setData({
         show: true,
         location: task.location,
@@ -71,12 +76,21 @@ showDetail(e){
         deadline: task.deadline,
         numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
         price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
-        restaurant: task.restaurant
+        restaurant: task.restaurant,
+
       })
-      console.log(task)
+      // console.log(task)
+      wx.setStorageSync('task', task)
     }
   })
+
   const child = this.selectComponent(".popWindow")
+
+
+  // this.setData({
+  //   'popWindowData[0].item': "child.data.location",
+  //   name: 'lol'
+  // })
   
 }
 })
