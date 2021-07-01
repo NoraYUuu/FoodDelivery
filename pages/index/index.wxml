@@ -37,4 +37,4 @@
     <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
     data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap="showDetail"></card>
 </view>
-<popout class="popWindow"></popout>
+<popout collected = "{{starred}}" class="popWindow"></popout>

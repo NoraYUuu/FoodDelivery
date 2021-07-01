@@ -9,7 +9,8 @@ Page({
   data: {
     // 轮播图数组
     swiperList: [],
-    allTask: []
+    allTask: [],
+    starred: false
 
   },
   // 页面开始加载 就会触发
@@ -23,7 +24,6 @@ Page({
     //     })
     //   }
     // });
-    wx.setStorageSync("name","haoyu")
     this.getSwiperList()
     // this.getCateList();
     // this.getFloorList();
@@ -64,11 +64,28 @@ onPullDownRefresh(){
 
 showDetail(e){
   var my_id = e.currentTarget.dataset.myid
+  console.log(e.currentTarget)
+  db.collection('collections').where({master_id: my_id}).get({
+    success: res => {
+      console.log(res.data.length)
+      if (res.data.length != 0) {
+        // console.log('exists')
+        this.setData({
+          starred: true
+        })
+      }
+      else {
+        this.setData({
+          starred: false
+        })
+      }
+    }
+  })
+
   db.collection('tasks').doc(my_id).get({
     success: function(res) {
       // res.data 包含该记录的数据
       const task = res.data
-
       child.setData({
         show: true,
         location: task.location,
@@ -76,21 +93,22 @@ showDetail(e){
         deadline: task.deadline,
         numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
         price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
-        restaurant: task.restaurant,
-
+        restaurant: task.restaurant
       })
       // console.log(task)
       wx.setStorageSync('task', task)
     }
+
+    
   })
-
+  
+  
   const child = this.selectComponent(".popWindow")
+  // console.log(this.data.starred)
+  
+ 
 
 
-  // this.setData({
-  //   'popWindowData[0].item': "child.data.location",
-  //   name: 'lol'
-  // })
   
 }
 })

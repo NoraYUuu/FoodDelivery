@@ -1,7 +1,8 @@
 {
   "usingComponents": {
     "Search": "../../components/Search/Search",
-    "card":"../../components/Card_Main/Card_Main"
+    "card":"../../components/Card_Main/Card_Main",
+    "popout": "../../components/Card_Detail/Card_Detail"
   },
 
   "navigationBarTitleText": "我的收藏"

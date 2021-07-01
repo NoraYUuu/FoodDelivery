@@ -7,7 +7,8 @@ Page({
    * Page initial data
    */
   data: {
-    allCollections: []
+    allCollections: [],
+    starred: true
   },
   
   getCollections() {
@@ -29,6 +30,37 @@ Page({
     
   },
 
+  showDetail(e){
+    console.log(e.currentTarget)
+    var my_id = e.currentTarget.dataset.myid
+    console.log(my_id)
+    db.collection('collections').doc(my_id).get({
+      success: function(res) {
+        // res.data 包含该记录的数据
+        const task = res.data
+        child.setData({
+          show: true,
+          location: task.location,
+          dLocation: task.dLocation,
+          deadline: task.deadline,
+          numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
+          price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
+          restaurant: task.restaurant
+        })
+        // console.log(task)
+      }
+  
+      
+    })
+    
+    const child = this.selectComponent(".popWindow")
+    // console.log(this.data.starred)
+    
+   
+  
+  
+    
+  },
   onPullDownRefresh(){
     this.getCollections();
   },
@@ -44,7 +76,7 @@ Page({
    * Lifecycle function--Called when page is initially rendered
    */
   onReady: function () {
-
+    this.getCollections();
   },
 
   /**

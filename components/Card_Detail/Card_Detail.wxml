@@ -40,8 +40,9 @@
       </view>
     </view>
   </view>
-    <text bindtap="star" class="star">收藏</text>
-    <text bindtap="ok" class="ok">加入拼团</text>
+    <text wx:if="{{!collected}}" bindtap="star" class="star">收藏</text>
+    <text wx:if="{{collected}}" bindtap="unstar" class="star">取消收藏</text>
+    <text bindtap="ok" class="ok">加入拼团 </text>
     <text bindtap="ok" class="ok">关闭</text>
     
 </view>
