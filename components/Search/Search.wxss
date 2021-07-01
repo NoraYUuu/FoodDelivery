@@ -3,10 +3,11 @@
   padding:10rpx;
   background-color: var(--themeColor);
 }
-.Search navigator {
+.Search input {
   height: 100%;
-  display: flex;
-  justify-content: center;
+  /* display: flex; */
+  padding-left: 10rpx;
+  justify-content:first baseline;
   align-items: center;
   background-color: #fff;
   border-radius: 15rpx;

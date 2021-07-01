@@ -19,7 +19,8 @@ Component({
    * Component initial data
    */
   data: {
-    searchContent:""
+    searchContent:"",
+    inputValue:''
   },
 
   /**
@@ -27,7 +28,12 @@ Component({
    */
   methods: {
   
-    
+    sendTxt(e) {
+      this.setData({
+        inputValue: e.detail.value
+      })
+      this.triggerEvent("inputGet", this.data.inputValue)
+    }
     
   }
 })

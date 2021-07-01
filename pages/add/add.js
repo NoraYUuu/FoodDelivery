@@ -31,7 +31,12 @@ Page({
     multiIndex: [0, 0, 0],
     contact:"",
     location:"",
-    selectedArr:[]
+    selectedArr:[],
+    inputValue: '',
+    // 是否隐藏模糊查询的面板
+    hideScroll: false,
+    // 模糊查询结果
+    searchTip: []
   },
   bindMoneyChange(e) {
     const val = e.detail.value
@@ -130,5 +135,53 @@ Page({
       lInput:''
     })
     this.selectComponent('#selectt').clear();
+  },
+  //search function
+
+  getGuess() {
+    const db = wx.cloud.database()
+  
+    db.collection('Restaurants').where({
+      name: db.RegExp({
+        regexp:this.data.inputValue,
+        options: 'i'
+      }),
+    }).get()
+    .then(res => {
+      console.log('success guess')
+      this.setData({
+        searchTip: res.data
+      })
+      this.checkHide()
+    })
+    .catch(res => {
+      console.log('failed guess', res)
+    })
+  },
+  handleItemChange(e) {
+    this.setData({
+      inputValue: e.detail
+    })
+    this.getGuess()
+  },
+  checkHide() {
+    if (this.data.inputValue === '') {
+      this.setData({
+        hideScroll:true
+      })
+    } else {
+      this.setData({
+        hideScroll:false
+      })
+    }
+  },
+  itemTap(e) {
+    const child = this.selectComponent("#search")
+    child.setData({
+      inputValue: e.currentTarget.dataset.name
+    })
+    this.setData({
+      hideScroll:true
+    })
   }
 })
