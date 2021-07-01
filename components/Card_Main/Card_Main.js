@@ -3,6 +3,7 @@ Component({
   /**
    * Component properties
    */
+  
   attached: function() {
     const r = this.dataset.restaurant;
     const d = this.dataset.deadline;
@@ -27,13 +28,14 @@ Component({
     resName:'',
     deadline:'',
     numOfPpl:'',
-    id:''
+    id:'',
+    show: true
   },
 
   /**
    * Component methods
    */
   methods: {
-
+    
   }
 })

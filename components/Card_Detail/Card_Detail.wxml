@@ -44,5 +44,6 @@
     <text wx:if="{{collected}}" bindtap="unstar" class="star">取消收藏</text>
     <text bindtap="ok" class="ok">加入拼团 </text>
     <text bindtap="ok" class="ok">关闭</text>
+    <!-- <view>{{pos}}</view> -->
     
 </view>

@@ -7,6 +7,10 @@ Component({
     collected: {
       type: Boolean,
       value:true
+    },
+    pos: {
+      type: String,
+      value: 'index'
     }
   },
 
@@ -47,21 +51,33 @@ Component({
       })
     },
     unstar: function (){
-      try {
+      if (this.data.pos=='index') {
         var value = wx.getStorageSync('task')
-        if (value) {
-          const db = wx.cloud.database()
-          db.collection('collections').where({master_id:value._id}).remove({
-            success: function(res) {
-              console.log(res.data)
-            }
-          })
-          
-        }
-      } catch (e) {
-        console.log(error)
+        console.log(this.data.pos)
+        const db = wx.cloud.database()
+        db.collection('collections').where({master_id:value._id}).remove({
+          success: function(res) {
+            // console.log(value._id)
+            console.log('deleted')
+            console.log(res.data)
+          }
+        })
+        
+      }
+      else {
+        var value = wx.getStorageSync('current_card')
+        console.log(this.data.pos)
+        const db = wx.cloud.database()
+        db.collection('collections').doc(value).remove({
+          success: function(res) {
+            // console.log(value._id)
+            console.log('deleted')
+            console.log(res.data)
+          }
+        })
       }
     },
+
     star: function () {
 
       // console.log(this.restaurant)

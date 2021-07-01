@@ -8,7 +8,8 @@ Page({
    */
   data: {
     allCollections: [],
-    starred: true
+    starred: true,
+    show: false
   },
   
   getCollections() {
@@ -33,6 +34,7 @@ Page({
   showDetail(e){
     console.log(e.currentTarget)
     var my_id = e.currentTarget.dataset.myid
+    wx.setStorageSync('current_card', my_id)
     console.log(my_id)
     db.collection('collections').doc(my_id).get({
       success: function(res) {
@@ -62,14 +64,22 @@ Page({
     
   },
   onPullDownRefresh(){
-    this.getCollections();
+    this.getCollections()
   },
 
   /**
    * Lifecycle function--Called when page load
    */
-  onLoad: function (options) {
-    this.getCollections();
+  onLoad: function () {
+    this.getCollections()
+    this.setData({
+      show: true
+    })
+    // const child = this.selectComponent(".a")
+    // console.log(child)
+    // child.setData({
+    //   show: false
+    // })
   },
 
   /**
@@ -84,20 +94,35 @@ Page({
    */
   onShow: function () {
     this.getCollections();
+    this.setData({
+      show: true
+    })
   },
 
   /**
    * Lifecycle function--Called when page hide
    */
   onHide: function () {
-
+    this.getCollections();
+    // this.selectComponent(".card").setData({
+    //   show: false
+    // })
+    this.setData({
+      show: false
+    })
   },
 
   /**
    * Lifecycle function--Called when page unload
    */
   onUnload: function () {
-
+    // const child = this.selectComponent(".card")
+    // child.setData({
+    //   show: false
+    // })
+    this.setData({
+      show: false
+    })
   },
 
   /**
