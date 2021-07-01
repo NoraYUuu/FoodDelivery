@@ -12,7 +12,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    newslist: [{ "date": "16:14 30/06/01", "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132", "nickName": "微信用户", "type": "text", "content": "人工写的，你发不出来的" },
+    newslist: [{ "date": "16:14 30/06/01", "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132", "nickName": "微信用户", "type": "text", "content": "现在可以发出来信息了！！！但是我不知道怎么同时开两个窗口来调试！！！等我下午再下载一个软件！！！" },
     { "date": "16:17 30/06/01", "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132", "nickName": "123", "type": "text", "content": "呜呜呜好难" }],
     userInfo: {},
     scrollTop: 0,
@@ -38,26 +38,21 @@ Page({
   onLoad: function () {
     var self = this;
 
+
     //调通接口
-    /* websocket.connect(this.data.userInfo, function (res) {
-      // console.log(JSON.parse(res.data))
-      var list = []
-      list = that.data.newslist
-      list.push(JSON.parse(res.data))
-      that.setData({
-        newslist: list
-      })
-    }) */
     pubSub.subscribe({
       channel: "my_channel",
       onMessage: function (msg) {
+        //console.log(msg);
         self.unshiftMessage(msg.content);
       },
       onSuccess: function () {
-        self.unshiftMessage('订阅成功。');
+        //self.unshiftMessage('订阅成功。');
+        console.log("订阅成功");
       },
       onFailed: function (err) {
-        self.unshiftMessage("订阅失败，错误编码：" + err.code + "错误信息：" + err.content);
+        self.unshiftMessage('{ "content": "订阅失败，错误编码 ' + err.code + " 错误信息: " + err.content + '", "date": "' + app.formatDate(new Date()) + '","type":"text", "nickName": "' + self.data.userInfo.nickName + '", "avatarUrl": "' + self.data.userInfo.avatarUrl + '" }');
+        console.log("订阅失败，错误编码：" + err.code + "错误信息：" + err.content);
       }
     });
   },
@@ -68,33 +63,18 @@ Page({
     var content = self.data.message;
     if (content.trim() != '') {
       //发送消息
+      var newMsg = '{ "content": "' + content + '", "date": "' + app.formatDate(new Date()) + '","type":"text", "nickName": "' + self.data.userInfo.nickName + '", "avatarUrl": "' + self.data.userInfo.avatarUrl + '" }';
+
       pubSub.publish({
         channel: "my_channel",
-        message: content,
+        message: newMsg,
 
         onSuccess: function () {
-          //console.log('message sent: ' + JSON.parse(content));
-          var list = [];
-          list = self.data.newslist;
-          var newMsg = {};
-          var showTime = app.formatDate(new Date());
-          newMsg = {
-            "nickName": self.data.userInfo.nickName,
-            "date": showTime,
-            "avatarUrl": self.data.userInfo.avatarUrl,
-            "type": "text",
-            "content": self.data.message
-          }
-
-          list.push(newMsg);
-          self.setData({
-            newslist: list,
-            message: ''
-          });
+          console.log('message sent: ' + newMsg);
           console.log("send message success");
         },
         onFailed: function (err) {
-          self.unshiftMessage("消息发送失败，错误编码：" + err.code + "错误信息：" + err.content);
+          self.unshiftMessage('{ "content": "消息发送失败，错误编码"' + err.code + " 错误信息: " + err.content + '", "date": "' + app.formatDate(new Date()) + '","type":"text", "nickName": "' + self.data.userInfo.nickName + '", "avatarUrl": "' + self.data.userInfo.avatarUrl + '" }');
         }
       })
     } else {
@@ -106,46 +86,14 @@ Page({
   },
 
   unshiftMessage(content) {
-    var formattedTime = app.formatDate(new Date());
-    var message = formattedTime + " " + content;
-    var messages = this.data.messages;
-    messages.push(message);
+    //var message = formattedTime + " " + content;
+    var messages = this.data.newslist;
+    messages.push(JSON.parse(content));
     this.setData({
-      messages: messages
+      newslist: messages
     })
   },
 
-
-
-
-  // 页面卸载
-  /* onUnload() {
-    wx.closeSocket();
-    wx.showToast({
-      title: '连接已断开~',
-      icon: "none",
-      duration: 2000
-    })
-  }, */
-  //事件处理函数
-  send: function () {
-    var flag = this
-    if (this.data.message.trim() == "") {
-      wx.showToast({
-        title: '消息不能为空哦~',
-        icon: "none",
-        duration: 2000
-      })
-    } else {
-      setTimeout(function () {
-        flag.setData({
-          increase: false
-        })
-      }, 500)
-      websocket.send('{ "content": "' + this.data.message + '", "date": "' + utils.formatTime(new Date()) + '","type":"text", "nickName": "' + this.data.userInfo.nickName + '", "avatarUrl": "' + this.data.userInfo.avatarUrl + '" }')
-      this.bottom()
-    }
-  },
   //监听input值的改变
   bindChange(res) {
     this.setData({

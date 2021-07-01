@@ -72,27 +72,30 @@ page {
     vertical-align: middle;
     margin-right: 10rpx;
   }
-  .new_txt_self {
-    max-width: 300rpx;
+  .new_txt_self{
+    max-width: 600rpx;
     display: inline-block;
     border-radius: 6rpx;  
     line-height: 60rpx;
     background-color: white;   
     padding: 5rpx 20rpx; 
-    margin: 0 10rpx;
-    margin-left: 50rpx;
+    margin: 20rpx 10rpx;
+    margin-left: 10rpx;
+    text-align: left;
   }  
 
   .new_txt_others {
-    max-width: 300rpx;
+    background-color:var(--themeColor);   
+    max-width: 600rpx;
     display: inline-block;
     border-radius: 6rpx;  
-    line-height: 60rpx;
-    background-color:var(--themeColor);   
+    line-height: 60rpx;   
     padding: 5rpx 20rpx; 
-    margin: 0 10rpx;
-    margin-left: 50rpx;
+    margin: 20rpx 10rpx;
+    margin-left: 10rpx;
+    text-align: left;
   } 
+
   .my_right .new_txt{
      margin-right:60rpx; 
   }
