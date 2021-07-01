@@ -8,6 +8,7 @@ Component({
     const d = this.dataset.deadline;
     const n = this.dataset.numberofpeople;
     const id = this.dataset.myid;
+    // console.log(this.dataset)
     this.setData({
       resName:r,
       deadline:d,
