@@ -3,11 +3,12 @@
   <Search data-content = "搜索"></Search>
   <!-- End Search-->
 </view>
-<view class='a' wx:for="{{allCollections}}">
+
+<view wx:if="{{show}}" class='a' wx:for="{{allCollections}}">
     <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
     data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail"></card>
 </view>
-<popout collected = "{{starred}}" class="popWindow"></popout>
+<popout collected = "{{starred}}" pos = "collection" class="popWindow"></popout>
 <!-- <view wx:for="{{info.details}}" wx:key="key" class="forItemBorder">
 	<view class="weui-cell weui-cell_input ">
 		<view class="weui-cell__hd">

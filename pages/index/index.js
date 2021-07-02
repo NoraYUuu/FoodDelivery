@@ -65,7 +65,7 @@ onPullDownRefresh(){
 
 showDetail(e){
   var my_id = e.currentTarget.dataset.myid
-  console.log(e.currentTarget)
+  wx.setStorageSync('current_card', my_id)
   db.collection('collections').where({master_id: my_id}).get({
     success: res => {
       console.log(res.data.length)
@@ -102,14 +102,17 @@ showDetail(e){
 
     
   })
-  
-  
   const child = this.selectComponent(".popWindow")
   // console.log(this.data.starred)
-  
- 
+},
+onShow() {
+  this.getTask()
+},
 
-
-  
+/**
+ * Lifecycle function--Called when page unload
+ */
+onUnload: function () {
+  this.getTask()
 }
 })
