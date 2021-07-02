@@ -11,8 +11,12 @@ Page({
    */
   data: {
     allCollections: [],
+    myPublish:[],
     starred: true,
     show: true,
+    selected: 0,
+    list: ['我发布的', '我的收藏'],
+    openid:''
     len: 0
   },
   
@@ -28,6 +32,21 @@ Page({
         })
         console.log("updated collections")
         console.log(res.data)
+      }
+    });
+    this.getOpenid();
+    console.log(this.data.openid)
+    console.log('here')
+    db.collection('tasks').where({
+      _openid: this.data.openid
+    }).get({
+      //如果查询成功的话    
+      success: res => {
+        //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值
+        this.setData({
+          myPublish: res.data
+        })
+        console.log(this.data.myPublish)
       }
     })
     
@@ -142,12 +161,18 @@ Page({
     this.setData({
       show: true
     })
-
-    // const child = this.selectComponent(".a")
-    // console.log(child)
-    // child.setData({
-    //   show: false
-    // })
+    var that = this;
+    /** 
+     * 获取系统信息,系统宽高
+     */
+    wx.getSystemInfo({
+      success: function (res) {
+        that.setData({
+          winWidth: res.windowWidth,
+          winHeight: res.windowHeight
+        });
+      }
+    });
   },
 
   /**
@@ -212,5 +237,43 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
+  },
+  selected: function (e) {
+    console.log(e)
+    let that = this
+    let index = e.currentTarget.dataset.index
+    console.log(index)
+    if (index == 0) {
+      that.setData({
+        selected: 0
+      })
+    } else {
+      that.setData({
+        selected: 1
+      })
+    }
+  },
+  getOpenid: function() { 
+    let that = this;  
+    wx.login({success: function(res) { 
+      wx.request({     
+        url: 'https://norayuuu.github.io/',     
+        data: {appid: 'wx95bf8e473873b65d', 
+        secret: '05e4eefc3c4f9601b0f6c44558b70300', code: res.code},     
+        success: function(response) { 
+          console.log(response.data)
+          var openid = response.data.openid;      
+          console.log('请求获取openid:' + openid);      //可以把openid存到本地，方便以后调用
+          wx.setStorageSync('openid', openid);
+          that.setData({       
+            openid: openid
+        })
+       },
+       fail(response) {
+         console.log(response)
+       } 
+      })
+     }
+    })
+   }
 })
