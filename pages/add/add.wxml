@@ -8,7 +8,7 @@
 <scroll-view scroll-y="true" class="search-res" hidden="{{hideScroll}}">
         <block wx:for="{{searchTip}}" wx:key="content" wx:for-item="item"> 
             <view class="tip-item" bindtap="itemTap" data-position = "{{item.foodpandaLink}}"
-            data-id = "{{item._id}}" data-name = "{{item.name}}">
+            data-id = "{{item._id}}" data-name = "{{item.name}}" data-img = "{{item.Image_URL}}">
                 <view class="left">
                     <view class="content">
                         {{item.name}}
@@ -20,7 +20,7 @@
     </scroll-view>
 
 <view class="rImg">
-  <image class="rImg" mode="aspectFit"  src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F17026bfe5d56794fff418a40195862b54c8f39ef46b2d-etk3LH_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626946341&t=f4a3beba6fc6a630f9a8eeca5b18ce03" />
+  <image class="rImg" mode="aspectFit"  src="{{resImage}}" />
 </view>
 
 <view class="page-section">

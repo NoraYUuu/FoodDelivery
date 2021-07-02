@@ -12,8 +12,11 @@
  }
  .title{
    color: rgb(141,94,0);
-   padding: 40rpx 20rpx 0rpx 280rpx;
-   font-size: large;
+   overflow: scroll;
+   padding: 40rpx 20rpx 0rpx 160rpx;
+   font-size: small;
+  
+  max-height: 40px;
  }
  .inline{
    padding: 30rpx 10rpx 40rpx 100rpx;

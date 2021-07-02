@@ -36,7 +36,8 @@ Page({
     // 是否隐藏模糊查询的面板
     hideScroll: false,
     // 模糊查询结果
-    searchTip: []
+    searchTip: [],
+    resImage: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F17026bfe5d56794fff418a40195862b54c8f39ef46b2d-etk3LH_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626946341&t=f4a3beba6fc6a630f9a8eeca5b18ce03'
   },
   bindMoneyChange(e) {
     const val = e.detail.value
@@ -91,6 +92,13 @@ Page({
       duration: 1000,
       mask:true
   })
+  } else if (this.selectComponent('#search').data.inputValue == '') {
+    wx.showToast({
+      title: '请选择餐厅',
+      icon: 'none',
+      duration: 1000,
+      mask:true
+  })
   } else {
       that.setData({
         selectedArr: selected
@@ -98,7 +106,7 @@ Page({
       const db = wx.cloud.database()
       db.collection('tasks').add({
         data:{
-          restaurant: '餐厅名字',
+          restaurant: this.selectComponent('#search').data.inputValue,
           dLocation: this.data.location,
           price: this.data.multiIndex,
           contact: this.data.contact,
@@ -107,7 +115,8 @@ Page({
           deadline: this.data.selectedArr[2],
           //in progress: -1, in progress: 0, complete: 1, not completed but expired: 2;
           state: -1,
-          joined:[]
+          joined:[],
+          image: this.data.resImage
         }
       }).then(
         this.clear()
@@ -132,9 +141,13 @@ Page({
       location:"",
       selectedArr:[],
       cInput:'',
-      lInput:''
+      lInput:'',
+      resImage: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F17026bfe5d56794fff418a40195862b54c8f39ef46b2d-etk3LH_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626946341&t=f4a3beba6fc6a630f9a8eeca5b18ce03'
     })
     this.selectComponent('#selectt').clear();
+    this.selectComponent('#search').setData({
+      inputValue:''
+    })
   },
   //search function
 
@@ -177,8 +190,12 @@ Page({
   },
   itemTap(e) {
     const child = this.selectComponent("#search")
+    console.log(e.currentTarget.dataset)
     child.setData({
-      inputValue: e.currentTarget.dataset.name
+      inputValue: e.currentTarget.dataset.name,
+    })
+    this.setData({
+      resImage: e.currentTarget.dataset.img
     })
     this.setData({
       hideScroll:true
