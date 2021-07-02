@@ -46,5 +46,46 @@ Page({
 			search_chats: false,
 			show_mask: false
 		});
+	},
+
+	chooseExcel() {
+		let that = this
+		wx.chooseMessageFile({
+			count: 1,
+			type: 'file',
+			success(res) {
+				let path = res.tempFiles[0].path;
+			console.log("chenggong" + path)
+		that.uploadExcel(path);
+				}
+		})
+	},
+
+	uploadExcel(path) {
+		let that = thiswx.cloudwx.uploadFile({
+			cloudPath: new Date().getTime() + '.xls',
+			filePath: path,
+			success: res => {
+				console.log("uploaded", res.fileID)
+				that.jiexi(res.fileID)
+			},
+			fail: err => {
+				console.log("failed", err)
+			},
+			jiexi(fileId) {
+				wx.cloud.callFunction({
+					name: "excel",
+					data: {
+						fileID: fileId
+					}, 
+					success(res) {
+						console.log("jiexi", res)
+					}, 
+					fail(res) {
+						console.log("jiexi failed", res)
+					}
+				})
+			}
+		})
 	}
 })

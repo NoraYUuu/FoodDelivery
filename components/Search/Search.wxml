@@ -1,5 +1,4 @@
 <view class="Search">
-  <navigator>
-  {{searchContent}}
-  </navigator>
+  <input value="{{inputValue}}" type="text" placeholder="{{searchContent}}" bindinput="sendTxt">
+  </input>
 </view>

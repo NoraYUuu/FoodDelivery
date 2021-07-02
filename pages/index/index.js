@@ -50,6 +50,7 @@ getTask() {
   db.collection('tasks').get({
     //如果查询成功的话    
     success: res => {
+      console.log(res.data)
       //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值     
       this.setData({
         allTask: res.data
@@ -101,14 +102,17 @@ showDetail(e){
 
     
   })
-  
-  
   const child = this.selectComponent(".popWindow")
   // console.log(this.data.starred)
-  
- 
+},
+onShow() {
+  this.getTask()
+},
 
-
-  
+/**
+ * Lifecycle function--Called when page unload
+ */
+onUnload: function () {
+  this.getTask()
 }
 })
