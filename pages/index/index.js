@@ -11,8 +11,7 @@ Page({
     swiperList: [],
     allTask: [],
     starred: false,
-    totalTasks:'',
-    allTaskStored:[]
+    totalTasks:''
   },
   // 页面开始加载 就会触发
   onLoad: function (options) {
@@ -53,17 +52,17 @@ getTask() {
   that.getListCount().then(res => {
     let count = res;
     that.setData({
-      allTaskStored:[],
       allTask:[]
     })
     for (let i = 0; i < count ; i += 20) {
         that.getListIndexSkip(i).then(res2 => {
           //dunno y the data is not set properly
-          if (that.data.allTask.length < count - 1) {
+          if (that.data.allTask.length < count-1) {
           that.setData({
-              allTask: that.data.allTask.concat(res2.data.reverse())
+              allTask: that.data.allTask.reverse().concat(res2.data).reverse()
             })
-            console.log(this.data.allTask)
+            console.log(that.data.allTask.length)
+            
           } else {
 
           }
@@ -161,7 +160,6 @@ getListIndexSkip(skip) {
       //skip值为0时，会报错
       selectPromise = db.collection('tasks').get()
     }
-    console.log(selectPromise + "pro")
     selectPromise.then(res => {
       resolve(res);
     }).catch(e => {

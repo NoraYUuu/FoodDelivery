@@ -4,17 +4,22 @@
   <!-- End Search-->
 </view>
 
-<view wx:if="{{show}}" class='a' wx:for="{{allCollections}}">
+<view class="nav_title">
+  <view class="nav_tab">
+    <view wx:for="{{list}}" class="{{selected==index?'hidden':'show'}}" data-index='{{index}}' bindtap="selected">{{item}}
+      <view class="{{selected==index?'nav_underline':''}}"></view>
+    </view>
+  </view>
+  <!-- tab框显示内容 -->
+	<view wx:if="{{show && selected == 1}}" class='a' wx:for="{{allCollections}}">
     <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
     data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail"></card>
 </view>
+<view wx:if="{{show && selected == 0}}" class='a' wx:for="{{myPublish}}">
+    <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
+    data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail"></card>
+</view>
+</view>
+
+
 <popout collected = "{{starred}}" pos = "collection" class="popWindow"></popout>
-<!-- <view wx:for="{{info.details}}" wx:key="key" class="forItemBorder">
-	<view class="weui-cell weui-cell_input ">
-		<view class="weui-cell__hd">
-			<view class="weui-label rui-justify">
-				<text space="ensp">途 径 地</text>
-			</view>
-		</view>
-	</view>
-</view> -->
