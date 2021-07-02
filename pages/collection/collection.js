@@ -12,7 +12,8 @@ Page({
   data: {
     allCollections: [],
     starred: true,
-    show: true
+    show: true,
+    len: 0
   },
   
   getCollections() {
@@ -33,11 +34,13 @@ Page({
   },
 
   showDetail(e){
-    // console.log(e.currentTarget)
+   
+    // console.log(this.allCollections.indexOf(e.currentTarget.dataset))
     // this.setData({
     //   show: false
     // }) //
     var my_id = e.currentTarget.dataset.myid
+    
     // console.log(e.currentTarget)
     wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
     // console.log(my_id)
@@ -90,18 +93,35 @@ Page({
     //   show: false
     // })
     // this.setShow()
-    console.log("unstar")
-    console.log("pressing unstar")
-    var max_time = 6
-    var len = this.data.allCollections.length
-    console.log(len)
-    while (max_time > 0 && len-1 != this.data.allCollections.length)
-    {
-      console.log("length:")
-      console.log(this.data.allCollections.length)
-      this.onLoad()
-      max_time -= 1
-    }
+    // console.log("unstar")
+    // console.log("pressing unstar")
+    // var max_time = 6
+    // var len = this.data.allCollections.length
+    // console.log(len)
+    const my_id = wx.getStorageSync('current_card')
+    const index=this.data.allCollections.map(a=>a._id).indexOf(my_id)
+    // console.log("index is " + index)
+    var oldcollection = this.data.allCollections
+    // console.log("old collection")
+    // console.log(oldcollection)
+    oldcollection.splice(index,1)
+    // console.log("new collection is")
+    console.log(oldcollection)
+    // var array = [1,2,3]
+    // console.log(array.splice(0,1))
+    this.setData({
+      allCollections: oldcollection
+    })
+    // while (max_time > 0 && len-1 != this.data.allCollections.length)
+    // {
+    //   console.log("length:")
+    //   console.log(this.data.allCollections.length)
+    //   this.setData({
+    //     len: this.data.allCollections.length
+    //   })
+    //   this.onLoad()
+    //   max_time -= 1
+    // }
     // console.log(this.data.allCollections)
     
     
