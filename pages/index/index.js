@@ -10,8 +10,9 @@ Page({
     // 轮播图数组
     swiperList: [],
     allTask: [],
-    starred: false
-
+    starred: false,
+    totalTasks:'',
+    allTaskStored:[]
   },
   // 页面开始加载 就会触发
   onLoad: function (options) {
@@ -42,26 +43,49 @@ Page({
   // 获取 分类导航数据
 getTask() {
   //1、引用数据库   
+  var that = this;
+  
   const db = wx.cloud.database({
     //这个是环境ID不是环境名称     
     env: 'cloud1-1gcwirla84b05897'
   })
+
+  that.getListCount().then(res => {
+    let count = res;
+    that.setData({
+      allTaskStored:[],
+      allTask:[]
+    })
+    for (let i = 0; i < count ; i += 20) {
+        that.getListIndexSkip(i).then(res2 => {
+          //dunno y the data is not set properly
+          if (that.data.allTask.length < count - 1) {
+          that.setData({
+              allTask: that.data.allTask.concat(res2.data.reverse())
+            })
+            console.log(this.data.allTask)
+          } else {
+
+          }
+          }).catch(e => {
+            console.error(e)
+            reject("查询失败")
+          })
+          
+      }
+      console.log(that.data.allTaskStored)
+
+    }).catch(e => {
+      reject("failed")
+
+    })
+  
+  
   //2、开始查询数据了  news对应的是集合的名称   
-  db.collection('tasks').get({
-    //如果查询成功的话    
-    success: res => {
-      console.log(res.data)
-      //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值     
-      this.setData({
-        allTask: res.data
-      })
-    }
-  })
 },
 onPullDownRefresh(){
   this.getTask();
 },
-
 
 showDetail(e){
   var my_id = e.currentTarget.dataset.myid
@@ -96,7 +120,7 @@ showDetail(e){
         price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
         restaurant: task.restaurant
       })
-      // console.log(task)
+  
       wx.setStorageSync('task', task)
     }
 
@@ -130,5 +154,36 @@ onShow() {
  */
 onUnload: function () {
   this.getTask()
+},
+getListCount() {
+  return new Promise((resolve, reject) => {
+    db.collection('tasks').count().then(res => {
+      resolve(res.total)
+      this.setData({
+        totalTasks: res.total
+      })
+    }).catch(e => {
+      console.log(e)
+      reject("查询失败")
+    })
+  })
+},
+getListIndexSkip(skip) {
+  return new Promise((resolve, reject) => {
+    let selectPromise;	
+    if (skip > 0) {
+      selectPromise = db.collection('tasks').skip(skip).get()
+    } else {
+      //skip值为0时，会报错
+      selectPromise = db.collection('tasks').get()
+    }
+    console.log(selectPromise + "pro")
+    selectPromise.then(res => {
+      resolve(res);
+    }).catch(e => {
+      console.error(e)
+      reject("查询失败!")
+    })
+  })
 }
 })
