@@ -10,7 +10,6 @@ Component({
     const n = this.dataset.numberofpeople;
     const id = this.dataset.myid;
     const img = this.dataset.img;
-    console.log(this.dataset)
     this.setData({
       resName:r,
       deadline:d,
