@@ -16,7 +16,7 @@ Page({
     show: true,
     selected: 0,
     list: ['我发布的', '我的收藏'],
-    openid:''
+    openid:'',
     len: 0
   },
   
