@@ -19,6 +19,7 @@ Component({
       cardImg:img
     });
   },
+  
   properties: {
 
   },

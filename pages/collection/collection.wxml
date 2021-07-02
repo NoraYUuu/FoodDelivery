@@ -6,9 +6,10 @@
 
 <view wx:if="{{show}}" class='a' wx:for="{{allCollections}}">
     <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
-    data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail"></card>
+    data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail" data-img="{{item.image}}"></card>
 </view>
-<popout collected = "{{starred}}" pos = "collection" class="popWindow"></popout>
+
+<popout collected = "{{starred}}" pos = "collection" class="popWindow" bindclose="handleclose" bindunstar="handleunstar"></popout>
 <!-- <view wx:for="{{info.details}}" wx:key="key" class="forItemBorder">
 	<view class="weui-cell weui-cell_input ">
 		<view class="weui-cell__hd">
