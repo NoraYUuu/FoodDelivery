@@ -1,13 +1,7 @@
 // app.js
-import GoEasy from './utils/goeasy-2.0.12.min.js';
 
 App({
   globalData: {
-    goEasy: GoEasy.getInstance({
-      host: "singapore.goeasy.io", //所在区域
-      appkey: "BC-e125f5620d5940659c206dc83fde9872", //common key
-      modules: ['pubsub']
-    }),
     userInfo: null
   },
   //新增globalData

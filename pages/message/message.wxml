@@ -19,7 +19,7 @@
         <!-- 这个view标签使用wx:for循环列表 -->
         <swipe-delete>
             <view class="tabs" bindtap="toSay">
-                <image class="img" src="../../images/msg.png"></image>
+                <image class="img" src="../../icons/xiaoxi.png"></image>
                 <view class="tab_l">
                     <view class="tabs_12">
                         <view class="user_f">聊天室</view>
