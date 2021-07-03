@@ -87,5 +87,12 @@ Page({
 				})
 			}
 		})
+	},
+
+	//跳转到聊天室
+	toSay() {
+		wx.navigateTo({
+			url: '../chatgroup/chatgroup',
+		})
 	}
 })

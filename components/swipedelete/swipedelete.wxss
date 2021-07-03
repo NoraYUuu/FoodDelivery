@@ -18,7 +18,7 @@
   position:absolute;
 	right: -160rpx; 
 	top:0;
-	background-color:#D0021B;
+	background-color: rgb(255, 22, 22);
 	width:160rpx;
 	height:100%;
 	text-align:center;

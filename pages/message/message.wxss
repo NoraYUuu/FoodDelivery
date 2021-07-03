@@ -28,6 +28,7 @@ navigator view.test {
 
 .search {
 	justify-content: space-around;
+	border-bottom: 1px solid #f1f1f2;
 }
 .search_input {
 	justify-content: space-around;	
@@ -91,6 +92,7 @@ navigator view.test {
 	position: fixed;
 	top: 128rpx;
 	overflow: hidden;
+	
 }
 
 .chat_noChat{
@@ -222,4 +224,58 @@ navigator view.test {
 }
 
 
+.tabs {
+	width: 750rpx;
+	height: 120rpx;
+	display: flex;
+	align-items: center;
+	padding: 0 30rpx;
+	box-sizing: border-box;
+	background-color: #fff;
+}
+
+
+.tab_l {
+	width: 570rpx;
+	height: 110rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #f1f1f2;
+	padding-bottom: 10rpx;
+}
+
+.img {
+	width: 90rpx;
+	height: 90rpx;
+	margin-right: 30rpx;
+	border-radius: 10rpx;
+}
+
+.tabs_l2 {
+	display: flex;
+	flex-direction: column;
+}
+
+.tab_r {
+	height: 100rpx;
+}
+
+.user_msg {
+	font-size: 28rpx;
+	color: #464646;
+}
+
+.user_f {
+	font-size: 32rpx;
+	color: #000;
+	margin-bottom: 10rpx;
+	font-weight: 500;
+
+}
+
+.time1 {
+	font-size: 26rpx;
+	color: #464646;
+}
 
