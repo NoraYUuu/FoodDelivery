@@ -35,6 +35,8 @@ Page({
       }
     });
     this.getOpenid();
+    console.log(this.data.openid)
+    console.log('here')
     db.collection('tasks').where({
       _openid: this.data.openid
     }).get({
