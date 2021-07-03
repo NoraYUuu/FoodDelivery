@@ -26,6 +26,8 @@ Page({
   handleGetUserInfo(e) {
     //console.log(e)
     const { userInfo } = e.detail; // or just e.detail
+    //console.log(e);
+    //console.log(userInfo);
     //app.globalData.userInfo = e.detail.userInfo;
     //console.log(app.globalData.userInfo);
     const db = wx.cloud.database()

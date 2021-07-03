@@ -55,9 +55,9 @@ Page({
 			type: 'file',
 			success(res) {
 				let path = res.tempFiles[0].path;
-			console.log("chenggong" + path)
-		that.uploadExcel(path);
-				}
+				console.log("成功" + path)
+				that.uploadExcel(path);
+			}
 		})
 	},
 
@@ -77,10 +77,10 @@ Page({
 					name: "excel",
 					data: {
 						fileID: fileId
-					}, 
+					},
 					success(res) {
 						console.log("jiexi", res)
-					}, 
+					},
 					fail(res) {
 						console.log("jiexi failed", res)
 					}

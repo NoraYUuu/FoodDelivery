@@ -3,10 +3,24 @@
 var utils = require('../../utils/util.js'); */
 
 let app = getApp();
+let DB = wx.cloud.database().collection("messages");
 let goEasy = app.globalData.goEasy;
 let pubSub = goEasy.pubsub;
 
 Page({
+
+  //删除消息
+  remove_msg(e) {
+    var self = this;
+    var id = e.currentTarget.dataset.id;
+    DB.doc(id).remove({
+      success(res) {
+        console.log("删除成功", res)
+        self.onLoad()
+      }
+    })
+  },
+
 
   /**
    * 页面的初始数据

@@ -35,6 +35,12 @@
           "pathName": "pages/message/message",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "chatgroup",
+          "pathName": "pages/chatgroup/chatgroup",
+          "query": "",
+          "scene": null
         }
       ]
     }
