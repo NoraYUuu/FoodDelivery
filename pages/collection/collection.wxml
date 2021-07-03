@@ -17,10 +17,8 @@
 </view>
 
 <view wx:if="{{show && selected == 0}}" class='a' wx:for="{{myPublish}}">
-    <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
-    data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail"></card>
+    <card data-mine="{{true}}" data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}" data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "childDetail"></card>
 </view>
 </view>
 
-
-<popout collected = "{{starred}}" pos = "collection" class="popWindow" bindclose="handleclose" bindunstar="handleunstar"></popout>
+<popout collected = "{{starred}}" pos = "collection" class="popWindow" bindclose="handleclose" bindunstar="handleunstar" bindupdate="updateReload" binddelete="updateReload"></popout>

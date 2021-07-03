@@ -76,3 +76,7 @@
   width: 180rpx;
   font-size: 28rpx;
 }
+
+.highlight{
+  color: var(--themeColor);
+}

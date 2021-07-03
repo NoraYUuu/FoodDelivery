@@ -12,19 +12,19 @@
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
       <text class="title">取餐地址: </text>
-      <text class="text">{{location}}</text>
+      <input disabled="{{disabled}}" focus="{{!disabled}}" value = "{{location}}" class="{{disabled ? 'text' : 'highlight text'}}" bindinput="inputLoc"></input>
       </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
       <text class="title">详细地址: </text>
-      <text class="text">{{dLocation}}</text>
+      <input class="{{disabled ? 'text' : 'highlight text'}}" disabled="{{disabled}}" value = "{{dLocation}}" bindinput="inputDLoc"></input>
       </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
       <text class="title">人数:</text>
-      <text class="text">{{numOfPpl}}</text>
+      <input class="{{disabled ? 'text' : 'highlight text'}}" disabled="{{disabled}}" value = "{{numOfPpl}}" bindinput="inputPpl"></input>
       </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
@@ -36,13 +36,15 @@
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
       <text class="title">闭团时间: </text>
-      <text class="text">{{deadline}}</text>
+      <input class="{{disabled ? 'text' : 'highlight text'}}" disabled="{{disabled}}" value = "{{deadline}}" placeholder="HH:mm" bindinput="inputDdl"></input>
       </view>
     </view>
   </view>
-    <text wx:if="{{!collected}}" bindtap="star" class="star">收藏</text>
-    <text wx:if="{{collected}}" bindtap="unstar" class="star">取消收藏</text>
-    <text bindtap="ok" class="ok">加入拼团 </text>
+    <text wx:if="{{!collected && !mine}}" bindtap="star" class="star">收藏</text>
+    <text wx:if="{{collected && !mine}}" bindtap="unstar" class="star">取消收藏</text>
+    <text wx:if="{{mine}}" class="ok" bindtap="bindUpdate">更新</text>
+    <text wx:if="{{mine}}" class="ok" bindtap="bindDelete">删除</text>
+    <text wx:if="{{!mine}}" bindtap="ok" class="ok">加入拼团 </text>
     <text bindtap="ok" class="ok">关闭</text>
     <!-- <view>{{pos}}</view> -->
     
