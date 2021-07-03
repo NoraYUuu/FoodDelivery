@@ -16,7 +16,7 @@ Page({
     show: true,
     selected: 0,
     list: ['我发布的', '我的收藏'],
-    openid:'oD-hi5UYfoqVSFfiyQhlwiQu6p0Y',
+    openid:'',
     len:0
   },
   
@@ -34,7 +34,7 @@ Page({
         // console.log(res.data)
       }
     });
-    //this.getOpenid();
+    this.getOpenid();
     db.collection('tasks').where({
       _openid: this.data.openid
     }).get({
@@ -60,12 +60,18 @@ Page({
     // console.log(e.currentTarget)
     wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
     // console.log(my_id)
+    const id = this.data.openid;
     db.collection('collections').doc(my_id).get({
       success: function(res) {
         // res.data 包含该记录的数据
         const task = res.data
+        console.log(task)
+        const check = (task.joined.length > 0) || (task._openid != id);
+        console.log(id)
+        console.log(task._openid)
+        console.log(check);
         child.setData({
-
+          disabled: true,
           show: true,
           location: task.location,
           dLocation: task.dLocation,
@@ -243,37 +249,19 @@ Page({
     }
   },
   getOpenid: function() { 
-    let that = this;  
-    wx.login({success: function(res) { 
-      wx.request({     
-        url: 'https://norayuuu.github.io',     
-        data: {appid: 'wx95bf8e473873b65d', 
-        secret: '05e4eefc3c4f9601b0f6c44558b70300', code: res.code},     
-        success: function(response) { 
-        
-          var openid = response.data.openid;      
-          console.log('请求获取openid:' + openid);      //可以把openid存到本地，方便以后调用
-          wx.setStorageSync('openid', openid);
-          that.setData({       
-            openid: openid
-        })
-       },
-       fail(response) {
-         console.log(response)
-       } 
-      })
-     }
-    })
-   },
+   this.setData({
+     openid: wx.getStorageSync('info').openid
+   })
+  },
    childDetail(e){
       let childd = this.selectComponent(".popWindow");
        var my_id = e.currentTarget.dataset.myid
-       wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
+      //  wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
        db.collection('tasks').doc(my_id).get({
          success: function(res) {
       //     // res.data 包含该记录的数据
            const task = res.data
-           const check = (task.joined.length > 0);
+           const check = (task.joined.length > 0) && (task._openid != this.data.openid);
           childd.setData({
             show: true,
             mine:true,
@@ -284,7 +272,8 @@ Page({
             numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
             num: task.joined.length + 1 + '/' + task.numberOfPeople,
             price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
-            restaurant: task.restaurant
+            restaurant: task.restaurant,
+            publishId:task._id
           })
         },
         fail(e) {

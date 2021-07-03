@@ -7,7 +7,7 @@
     "pages/login/login",
     "pages/search/index",
     "pages/message/message",
-    "pages/chatroom/chatroom"
+    "pages/chatgroup/chatgroup"
   ],
   "window": {
     "backgroundTextStyle": "dark",

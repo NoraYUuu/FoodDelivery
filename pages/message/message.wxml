@@ -14,14 +14,28 @@
         </view>
         <text bindtap="cancel">取消</text>
     </view>
-    <navigator url="/pages/chatroom/chatroom">
-        <view class="test">test to chatroom</view>
-    </navigator>
+    <view class="chat_list">
+        <!-- catchtap="del-chat" -->
+        <!-- 这个view标签使用wx:for循环列表 -->
+        <swipe-delete>
+            <view class="tabs" bindtap="toSay">
+                <image class="img" src="../../icons/xiaoxi.png"></image>
+                <view class="tab_l">
+                    <view class="tabs_12">
+                        <view class="user_f">聊天室</view>
+                        <view class="user_msg">[动画表情]</view>
+                    </view>
+                    <view class="tab_r">20:47</view>
+                    <!-- 需改为最后一条消息的时间 -->
+                </view>
+            </view>
+        </swipe-delete>
+    </view>
     <!-- 插入遍历消息入口 -->
     <!-- <view wx:if="{{arr.length == 0}}" class="chat_noChat">
 	当前没有历史聊天，添加一个好友开始聊天吧
     </view> -->
     <view class="chat_noChat">当前没有历史聊天，添加一个好友开始聊天吧~</view>
 </scroll-view>
-
-<button bindtap="chooseExcel">upload</button>
+<!-- upload button, can be used to upload screenshot -->
+<!-- <button bindtap="chooseExcel">upload</button> -->

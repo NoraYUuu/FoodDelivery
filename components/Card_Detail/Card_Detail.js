@@ -29,7 +29,8 @@ Component({
     num:'',
     mine: false,
     disabled: true,
-    canBeUpdated: true
+    canBeUpdated: true,
+    publishId:''
     // starred:false
   },
 
@@ -182,7 +183,9 @@ Component({
         dLocation:e.detail.value
       })
     },
-    bindUpdate() {
+    bindUpdate(e) {
+      console.log('clicked')
+      console.log(e)
       if (this.data.canBeUpdated && this.data.numOfPpl == (this.data.num || '')) {
         this.update(0);
       } else if (this.data.canBeUpdated && parseInt((this.data.numOfPpl.substring(0, 1))) >= 2 && parseInt((this.data.numOfPpl.substring(0, 1))) <= 6 ) {
@@ -200,11 +203,10 @@ Component({
       })
     },
     update(i){
-      var value = wx.getStorageSync('current_card');
       const db = wx.cloud.database();
       if (i == 1) {
         const p = new Promise(resolve => {
-          db.collection('tasks').doc(value).update({
+          db.collection('tasks').doc(this.data.publishId).update({
             data: {
               numberOfPeople: this.data.numOfPpl,
               deadline: this.data.deadline,
@@ -221,7 +223,7 @@ Component({
       })
     } else {
         const p = new Promise(resolve => {
-          db.collection('tasks').doc(value).update({
+          db.collection('tasks').doc(this.data.publishId).update({
             data: {
               deadline: this.data.deadline,
               location: this.data.location,
@@ -238,10 +240,9 @@ Component({
     }
     },
     bindDelete(e){
-      var value = wx.getStorageSync('current_card');
         const db = wx.cloud.database();
         const p = new Promise(resolve => {
-            db.collection('tasks').doc(value).remove({
+            db.collection('tasks').doc(this.data.publishId).remove({
               success(res) {
                 resolve(res);
                 console.log("deleted");
