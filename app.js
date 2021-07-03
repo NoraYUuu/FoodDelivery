@@ -8,14 +8,14 @@ App({
       appkey: "BC-e125f5620d5940659c206dc83fde9872", //common key
       modules: ['pubsub']
     }),
-    userInfo: ''
+    userInfo: null
   },
   //新增globalData
 
   onLaunch: function () {
     //this.extendDateFormat();
     //建立连接
-    this.globalData.goEasy.connect({
+    /* this.globalData.goEasy.connect({
       onSuccess: function () {
         console.log("GoEasy connect successfully.")
       },
@@ -32,7 +32,7 @@ App({
       onProgress: function (attemps) {
         console.log("GoEasy is connecting", attemps);
       }
-    });
+    }); */
     //连接GoEasy
 
     // 展示本地存储能力
@@ -44,6 +44,30 @@ App({
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        if (res.code) {
+          //console.log(res.code);
+          wx.request({
+            url: 'https://api.weixin.qq.com/sns/jscode2session',
+            method: "GET", //'post',
+            data: {
+              appid: 'wx95bf8e473873b65d',
+              secret: '05e4eefc3c4f9601b0f6c44558b70300',
+              js_code: res.code,
+              grant_type: 'authorization_code',
+              //req_id: 'TIbdqvXWf-RuhOpa'
+            },
+            header: {
+              'Content-type': 'application/json'
+            },
+            success: function (res) {
+              console.log(res.data);
+              //wx.setStorageSync('sessionKey', response.data.data.session_key); //存储sessionKey在storage
+              wx.setStorageSync('info', res.data);
+            }
+          })
+        } else {
+          console.log("登录失败");
+        }
       }
     })
 

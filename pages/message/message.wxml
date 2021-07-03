@@ -14,7 +14,11 @@
         </view>
         <text bindtap="cancel">取消</text>
     </view>
-    <navigator url="/pages/chatroom/chatroom">
+    <view class="chat_list" catchtap="del-chat">
+        <!-- 循环列表 -->
+        <swipe-delete></swipe-delete>
+    </view>
+    <navigator url="/pages/chatgroup/chatgroup">
         <view class="test">test to chatroom</view>
     </navigator>
     <!-- 插入遍历消息入口 -->
@@ -23,5 +27,4 @@
     </view> -->
     <view class="chat_noChat">当前没有历史聊天，添加一个好友开始聊天吧~</view>
 </scroll-view>
-
 <button bindtap="chooseExcel">upload</button>
