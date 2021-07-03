@@ -28,6 +28,7 @@ Page({
     // this.getCateList();
     // this.getFloorList();
     this.getTask()
+    
   },
 
   // 获取轮播图数据
@@ -51,33 +52,47 @@ getTask() {
 
   that.getListCount().then(res => {
     let count = res;
+    let list = [];
     that.setData({
       allTask:[]
-    })
-    for (let i = 0; i < count ; i += 20) {
-        that.getListIndexSkip(i).then(res2 => {
-          //dunno y the data is not set properly
-          if (that.data.allTask.length < count-1) {
-          that.setData({
-              allTask: that.data.allTask.reverse().concat(res2.data).reverse()
-            })
-            console.log(that.data.allTask.length)
-            
-          } else {
-
-          }
-          }).catch(e => {
-            console.error(e)
-            reject("查询失败")
-          })
-          
-      }
-      console.log(that.data.allTaskStored)
+    });
+    // let i = 0;
+    // while (i > count) {
+    //     that.getListIndexSkip(i).then(res2 => {
+    //       //dunno y the data is not set properly
+    //       list = list.reverse().concat(res2.data).reverse()
+    //       // console.log(list.length)
+    //       // console.log(count)
+    //       if (list.length == count) {
+    //       that.setData({
+    //           allTask: list
+    //         })
+    //         console.log("all tasks")
+    //         console.log(this.data.allTask)    
+    //       } else {
+    //       }
+    //       i += 20;
+    //       }).catch(e => {
+    //         console.error(e)
+    //         i+=20;
+    //         reject("查询失败")
+    //       }).finally(f => {
+    //         i+=20
+    //       })
+    //       // i+=20
+    //   }
+    this.recGetList(0, count).then(res => {
+      list = res
+      that.setData({
+        allTask: list.reverse()
+      })
+    });
+    
 
     }).catch(e => {
+      console.log(e);
       reject("failed")
-
-    })
+    }).catch(e => {})
   
   
   //2、开始查询数据了  news对应的是集合的名称   
@@ -88,10 +103,11 @@ onPullDownRefresh(){
 
 showDetail(e){
   var my_id = e.currentTarget.dataset.myid
+  console.log("myid")
+  console.log(e)
   wx.setStorageSync('current_card', my_id)
   db.collection('collections').where({master_id: my_id}).get({
     success: res => {
-      console.log(res.data.length)
       if (res.data.length != 0) {
         // console.log('exists')
         this.setData({
@@ -151,21 +167,65 @@ getListCount() {
     })
   })
 },
-getListIndexSkip(skip) {
-  return new Promise((resolve, reject) => {
-    let selectPromise;	
-    if (skip > 0) {
-      selectPromise = db.collection('tasks').skip(skip).get()
-    } else {
-      //skip值为0时，会报错
-      selectPromise = db.collection('tasks').get()
-    }
-    selectPromise.then(res => {
-      resolve(res);
-    }).catch(e => {
-      console.error(e)
-      reject("查询失败!")
+
+recGetList(skip, count){
+  let selectPromise;
+  if (skip == 0) {
+    let list = [];
+    selectPromise = new Promise((resolve, reject) => {this.recGetList(20, count).then(res => {
+      db.collection('tasks').get().then(res2 => {
+        list = res2.data.concat(res);
+        resolve(list)
+      }).catch(res => {
+        reject(res);
+      })
+    }).catch (res => {
+      reject(res)
     })
   })
+
+  return selectPromise;
+  } else if (count - skip <= 20) {
+    let list = [];
+    selectPromise = new Promise((resolve, reject) => {db.collection('tasks').skip(skip).get().then(res => {
+      list = res.data;
+      resolve(list);
+    }).catch(res => {
+      reject(res)
+    })});
+
+    return selectPromise;
+  } else {
+    let list = [];
+    selectPromise = new Promise((resolve, reject) => {this.recGetList(skip + 20, count).then(res => {
+      db.collection('tasks').skip(skip).get().then(res2 => {
+        list = res2.data.concat(res);
+        resolve(list)
+      }).catch(res => {
+        reject(res);
+      })
+    }).catch (res => {
+      reject(res)
+    })
+  });
+    return selectPromise;
+  }
 }
+// getListIndexSkip(skip) {
+//   return new Promise((resolve, reject) => {
+//     let selectPromise;	
+//     if (skip > 0) {
+//       selectPromise = db.collection('tasks').skip(skip).get()
+//     } else {
+//       //skip值为0时，会报错
+//       selectPromise = db.collection('tasks').get()
+//     }
+//     selectPromise.then(res => {
+//       resolve(res);
+//     }).catch(e => {
+//       console.error(e)
+//       reject("查询失败!")
+//     })
+//   })
+// }
 })

@@ -13,7 +13,7 @@ Page({
     show: false,
     selected: 0,
     list: ['我发布的', '我的收藏'],
-    openid:''
+    openid:'oD-hi5UYfoqVSFfiyQhlwiQu6p0Y'
   },
   
   getCollections() {
@@ -33,8 +33,7 @@ Page({
       }
     });
     this.getOpenid();
-    console.log(this.data.openid)
-    console.log('here')
+ 
     db.collection('tasks').where({
       _openid: this.data.openid
     }).get({
@@ -44,17 +43,16 @@ Page({
         this.setData({
           myPublish: res.data
         })
-        console.log(this.data.myPublish)
+      
       }
     })
     
   },
 
   showDetail(e){
-    console.log(e.currentTarget)
     var my_id = e.currentTarget.dataset.myid
+ 
     wx.setStorageSync('current_card', my_id)
-    console.log(my_id)
     db.collection('collections').doc(my_id).get({
       success: function(res) {
         // res.data 包含该记录的数据
@@ -186,11 +184,11 @@ Page({
     let that = this;  
     wx.login({success: function(res) { 
       wx.request({     
-        url: 'https://norayuuu.github.io/',     
+        url: 'https://norayuuu.github.io',     
         data: {appid: 'wx95bf8e473873b65d', 
         secret: '05e4eefc3c4f9601b0f6c44558b70300', code: res.code},     
         success: function(response) { 
-          console.log(response.data)
+        
           var openid = response.data.openid;      
           console.log('请求获取openid:' + openid);      //可以把openid存到本地，方便以后调用
           wx.setStorageSync('openid', openid);
