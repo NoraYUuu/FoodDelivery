@@ -16,8 +16,13 @@ Page({
     show: true,
     selected: 0,
     list: ['我发布的', '我的收藏'],
+<<<<<<< HEAD
     openid:'oD-hi5UYfoqVSFfiyQhlwiQu6p0Y',
     len:0
+=======
+    openid:'',
+    len: 0
+>>>>>>> main
   },
   
   getCollections() {
