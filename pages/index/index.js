@@ -144,6 +144,22 @@ showDetail(e){
   const child = this.selectComponent(".popWindow")
   // console.log(this.data.starred)
 },
+
+handleclick(){
+  console.log("clicked")
+  // const currentTask = wx.getStorageSync('task')
+  // const child = this.selectComponent(".popWindow")
+  // child.setData({
+  //   show: true,
+  //   location: currentTask.location,
+  //   dLocation: currentTask.dLocation,
+  //   deadline: currentTask.deadline,
+  //   numOfPpl: currentTask.joined.length + 1 + '/' + currentTask.numberOfPeople,
+  //   price: ((currentTask.price[0] + currentTask.price[1] * 0.1 + currentTask.price[2]*0.01)/currentTask.numberOfPeople).toFixed(2),
+  //   restaurant: currentTask.restaurant
+  // })
+ 
+},
 onShow() {
   this.getTask()
 },

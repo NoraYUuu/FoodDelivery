@@ -49,7 +49,9 @@ Component({
       this.setData({
         show: false
       })
+      this.triggerEvent("close")
     },
+
     unstar: function (){
       if (this.data.pos=='index') {
         var value = wx.getStorageSync('task')
@@ -62,10 +64,23 @@ Component({
             console.log(res.data)
           }
         })
+
+        this.setData({
+          collected: false
+        })
+        wx.setStorageSync('collected', false)
         
+        wx.showToast({
+          title: '取消收藏成功',
+          icon: 'none',
+          duration: 1000,
+          mask:true
+        })
+        this.triggerEvent("unstar")
+    
       }
       else {
-        var value = wx.getStorageSync('current_card')
+        var value = wx.getStorageSync('current_card') //获取当前点击卡片 
         console.log(this.data.pos)
         const db = wx.cloud.database()
         db.collection('collections').doc(value).remove({
@@ -74,12 +89,23 @@ Component({
             console.log('deleted')
             console.log(res.data)
           }
+        }),
+        this.setData({
+          collected: false
         })
+        
+        wx.setStorageSync('collected', false)
+        wx.showToast({
+          title: '取消收藏成功',
+          icon: 'none',
+          duration: 1000,
+          mask:true
+        })
+        this.triggerEvent("unstar")
       }
     },
 
     star: function () {
-
       // console.log(this.restaurant)
       try {
         var value = wx.getStorageSync('task')
@@ -88,6 +114,7 @@ Component({
           const db = wx.cloud.database()
           db.collection('collections').add({
             data:{
+              image: value.image,
               restaurant: value.restaurant,
               dLocation: value.dLocation,
               price: value.price,
@@ -102,6 +129,11 @@ Component({
             }
           })
         }
+        this.triggerEvent("click")
+        this.setData({
+          collected: true
+        })
+        wx.setStorageSync('collected', true)
       } catch (e) {
         console.log(error)
       }

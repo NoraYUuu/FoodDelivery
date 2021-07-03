@@ -1,6 +1,9 @@
 // pages/collection/collection.js
 
-const db = wx.cloud.database({});
+const db = wx.cloud.database({
+  //这个是环境ID不是环境名称     
+  env: 'cloud1-1gcwirla84b05897'
+})
 Page({
 
   /**
@@ -10,18 +13,15 @@ Page({
     allCollections: [],
     myPublish:[],
     starred: true,
-    show: false,
+    show: true,
     selected: 0,
     list: ['我发布的', '我的收藏'],
-    openid:'oD-hi5UYfoqVSFfiyQhlwiQu6p0Y'
+    openid:'oD-hi5UYfoqVSFfiyQhlwiQu6p0Y',
+    len:0
   },
   
   getCollections() {
     //1、引用数据库   
-    const db = wx.cloud.database({
-      //这个是环境ID不是环境名称     
-      env: 'cloud1-1gcwirla84b05897'
-    })
     //2、开始查询数据了  news对应的是集合的名称 
     db.collection('collections').get({
       //如果查询成功的话    
@@ -30,6 +30,8 @@ Page({
         this.setData({
           allCollections: res.data
         })
+        console.log("updated collections")
+        console.log(res.data)
       }
     });
     this.getOpenid();
@@ -50,14 +52,22 @@ Page({
   },
 
   showDetail(e){
+   
+    // console.log(this.allCollections.indexOf(e.currentTarget.dataset))
+    // this.setData({
+    //   show: false
+    // }) //
     var my_id = e.currentTarget.dataset.myid
- 
-    wx.setStorageSync('current_card', my_id)
+    
+    // console.log(e.currentTarget)
+    wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
+    // console.log(my_id)
     db.collection('collections').doc(my_id).get({
       success: function(res) {
         // res.data 包含该记录的数据
         const task = res.data
         child.setData({
+
           show: true,
           location: task.location,
           dLocation: task.dLocation,
@@ -71,7 +81,6 @@ Page({
   
       
     })
-    
     const child = this.selectComponent(".popWindow")
     // console.log(this.data.starred)
     
@@ -81,14 +90,73 @@ Page({
     
   },
   onPullDownRefresh(){
-    this.getCollections()
+    this.onLoad()
   },
 
+  handleclose(){
+    this.getCollections()
+    this.setData({
+      starred: true,
+      show: false
+    })
+    this.setShow()
+    this.onLoad()
+    console.log("closed")
+    console.log(this.data.allCollections)
+    
+  },
+
+  handleunstar(){
+    // this.setData({
+    //   show: false
+    // })
+    // this.setShow()
+    // console.log("unstar")
+    // console.log("pressing unstar")
+    // var max_time = 6
+    // var len = this.data.allCollections.length
+    // console.log(len)
+    const my_id = wx.getStorageSync('current_card')
+    const index=this.data.allCollections.map(a=>a._id).indexOf(my_id)
+    // console.log("index is " + index)
+    var oldcollection = this.data.allCollections
+    // console.log("old collection")
+    // console.log(oldcollection)
+    oldcollection.splice(index,1)
+    // console.log("new collection is")
+    console.log(oldcollection)
+    // var array = [1,2,3]
+    // console.log(array.splice(0,1))
+    this.setData({
+      allCollections: oldcollection
+    })
+    // while (max_time > 0 && len-1 != this.data.allCollections.length)
+    // {
+    //   console.log("length:")
+    //   console.log(this.data.allCollections.length)
+    //   this.setData({
+    //     len: this.data.allCollections.length
+    //   })
+    //   this.onLoad()
+    //   max_time -= 1
+    // }
+    // console.log(this.data.allCollections)
+    
+    
+    
+  },
+
+  setShow(){
+    this.setData({
+      show: true
+    })
+  },
   /**
    * Lifecycle function--Called when page load
    */
   onLoad: function () {
     this.getCollections()
+    console.log("onLoad")
     this.setData({
       show: true
     })
@@ -110,30 +178,34 @@ Page({
    * Lifecycle function--Called when page is initially rendered
    */
   onReady: function () {
-    this.getCollections();
+    // console.log("onready")
+    // this.setData({
+    //   show:true
+    // })
   },
 
   /**
    * Lifecycle function--Called when page show
    */
   onShow: function () {
+    console.log("shown")
     this.getCollections();
-    this.setData({
-      show: true
-    })
+    // this.setData({
+    //   show: true
+    // })
   },
 
   /**
    * Lifecycle function--Called when page hide
    */
   onHide: function () {
-    this.getCollections();
+    // this.getCollections();
     // this.selectComponent(".card").setData({
     //   show: false
     // })
-    this.setData({
-      show: false
-    })
+    // this.setData({
+    //   show: false
+    // })
   },
 
   /**
@@ -144,9 +216,9 @@ Page({
     // child.setData({
     //   show: false
     // })
-    this.setData({
-      show: false
-    })
+    // this.setData({
+    //   show: false
+    // })
   },
 
   /**

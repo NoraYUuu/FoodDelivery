@@ -38,4 +38,4 @@
     data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap="showDetail"
     data-img = "{{item.image}}"></card>
 </view>
-<popout collected = "{{starred}}" class="popWindow"></popout>
+<popout collected = "{{starred}}" class="popWindow" bindclick = "handleclick"></popout>
