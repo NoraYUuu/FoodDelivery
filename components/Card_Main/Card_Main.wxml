@@ -1,6 +1,6 @@
 <view class="card" wx:if="{{show}}">
   <view class="img">
-    <image src="{{cardImg}}" mode="aspectFit"></image>
+    <image src="{{cardImg}}" mode="widthFix"></image>
   </view>
   <view class="title">{{resName}}</view>
   <text class="inline"> 截止时间: {{deadline}}</text>

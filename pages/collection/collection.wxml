@@ -11,14 +11,22 @@
     </view>
   </view>
   <!-- tab框显示内容 -->
-	<view wx:if="{{show && selected == 1}}" class='a' wx:for="{{allCollections}}">
+	
+
+  <view wx:if="{{show && selected == 0}}" class='a' wx:for="{{myPublish}}">
+      <card data-mine="{{true}}" data-numberOfPeople="{{item.numberOfPeople}}" 
+      data-deadline="{{item.deadline}}" data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "childDetail"></card>
+  </view>
+
+  <view wx:if="{{show && selected == 1}}" class='a' wx:for="{{allCollections}}">
     <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
     data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail" data-img="{{item.image}}"></card>
-</view>
+  </view>
 
-<view wx:if="{{show && selected == 0}}" class='a' wx:for="{{myPublish}}">
-    <card data-mine="{{true}}" data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}" data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "childDetail"></card>
-</view>
+  <!-- <view wx:if="{{show && selected == 2}}" class='a' wx:for="{{myPublish}}">
+      <card data-mine="{{true}}" data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}" data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "childDetail"></card>
+  </view> -->
+
 </view>
 
 <popout collected = "{{starred}}" pos = "collection" class="popWindow" bindclose="handleclose" bindunstar="handleunstar" bindupdate="updateReload" binddelete="updateReload"></popout>

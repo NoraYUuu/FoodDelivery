@@ -23,11 +23,11 @@
 }
 .nav_underline{
   background:var(--themeColor);
-  width:230rpx;
-  height:6rpx;
+  width:120rpx;
+  height:5rpx;
   margin-top:-10rpx;
   margin-left:70rpx;
-  border-radius:8rpx;
+  border-radius:10rpx;
 }
 .tab_view{
   width:100%;

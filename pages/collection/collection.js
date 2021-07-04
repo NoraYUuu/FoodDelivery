@@ -15,7 +15,7 @@ Page({
     starred: true,
     show: true,
     selected: 0,
-    list: ['我发布的', '我的收藏'],
+    list: ['我发布的', '我的收藏', '推荐拼团'],
     openid:'',
     len:0
   },
@@ -73,6 +73,7 @@ Page({
         console.log(task._openid)
         console.log(check);
         child.setData({
+          mine:false,
           disabled: true,
           show: true,
           location: task.location,
@@ -245,9 +246,15 @@ Page({
         selected: 0
       })
     } else {
-      that.setData({
-        selected: 1
-      })
+      if (index == 1) {
+        that.setData({
+          selected: 1
+        })
+      } else {
+        that.setData({
+          selected: 2
+        })
+      }
     }
   },
   getOpenid: function() { 
