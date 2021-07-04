@@ -25,7 +25,12 @@ Component({
     dLocation:'',
     price:'',
     numOfPpl:'',
-    contact:''
+    contact:'',
+    num:'',
+    mine: false,
+    disabled: true,
+    canBeUpdated: true,
+    publishId:''
     // starred:false
   },
 
@@ -138,7 +143,114 @@ Component({
         console.log(error)
       }
       
+    },
+    inputDdl(e) {
+      const comma = e.detail.value.substring(2,3);
+      const hours = parseInt(e.detail.value.substring(0, 2));
+      const min = parseInt(e.detail.value.substring(3, 5));
+      if (e.detail.value.length==5 && (comma == ":") && hours >= 0 && hours <= 24 && min>=0 && min<=59) {
+      this.setData({
+        deadline: e.detail.value,
+        canBeUpdated: true
+      })
+    } else {
+      console.log(comma)
+      console.log(hours)
+      console.log(min)
+      this.toastMsg("请输入如23:45的时间格式")
+      this.setData({
+        canBeUpdated: false
+      })
     }
-  
-  }
+    },
+    inputPpl(e) {
+      if (parseInt(e.detail.value) >= 2 && parseInt(e.detail.value) <= 6) {
+      this.setData({
+        numOfPpl: e.detail.value
+      })
+      console.log(this.data.numOfPpl)
+    } else {
+      this.toastMsg("请输入2-6的整数")
+    }
+    },
+    inputLoc(e){
+      this.setData({
+        location: e.detail.value
+      })
+    },
+    inputDLoc(e){
+      this.setData({
+        dLocation:e.detail.value
+      })
+    },
+    bindUpdate(e) {
+      console.log('clicked')
+      console.log(e)
+      if (this.data.canBeUpdated && this.data.numOfPpl == (this.data.num || '')) {
+        this.update(0);
+      } else if (this.data.canBeUpdated && parseInt((this.data.numOfPpl.substring(0, 1))) >= 2 && parseInt((this.data.numOfPpl.substring(0, 1))) <= 6 ) {
+        this.update(1);
+      } else {
+      this.toastMsg("update failed")
+      }
+    },
+    toastMsg(msg) {
+      wx.showToast({
+        title: msg,
+        icon: 'none',
+        duration: 1000,
+        mask:true
+      })
+    },
+    update(i){
+      const db = wx.cloud.database();
+      if (i == 1) {
+        const p = new Promise(resolve => {
+          db.collection('tasks').doc(this.data.publishId).update({
+            data: {
+              numberOfPeople: this.data.numOfPpl,
+              deadline: this.data.deadline,
+              location: this.data.location,
+              dLocation: this.data.dLocation
+            },
+            success: function(res) {
+              resolve(res)
+            }
+          })
+        });
+      p.then(res =>   {
+        this.triggerEvent("update", this.data.inputValue)
+      })
+    } else {
+        const p = new Promise(resolve => {
+          db.collection('tasks').doc(this.data.publishId).update({
+            data: {
+              deadline: this.data.deadline,
+              location: this.data.location,
+              dLocation: this.data.dLocation
+            },
+            success: function(res) {
+              resolve(res)
+            }
+          })
+        });
+      p.then(res =>  {
+        this.triggerEvent("update", this.data.inputValue)
+      })
+    }
+    },
+    bindDelete(e){
+        const db = wx.cloud.database();
+        const p = new Promise(resolve => {
+            db.collection('tasks').doc(this.data.publishId).remove({
+              success(res) {
+                resolve(res);
+                console.log("deleted");
+              }
+            })});
+        p.then(res => {this.triggerEvent("delete", this.data.inputValue)})
+  },
+}
 })
+
+

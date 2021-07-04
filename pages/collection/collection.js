@@ -16,7 +16,7 @@ Page({
     show: true,
     selected: 0,
     list: ['我发布的', '我的收藏'],
-    openid:'oD-hi5UYfoqVSFfiyQhlwiQu6p0Y',
+    openid:'',
     len:0
   },
   
@@ -30,8 +30,8 @@ Page({
         this.setData({
           allCollections: res.data
         })
-        console.log("updated collections")
-        console.log(res.data)
+        // console.log("updated collections")
+        // console.log(res.data)
       }
     });
     this.getOpenid();
@@ -45,8 +45,7 @@ Page({
         //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值
         this.setData({
           myPublish: res.data
-        })
-        console.log(this.data.myPublish)
+        })     
       }
     })
     
@@ -63,12 +62,18 @@ Page({
     // console.log(e.currentTarget)
     wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
     // console.log(my_id)
+    const id = this.data.openid;
     db.collection('collections').doc(my_id).get({
       success: function(res) {
         // res.data 包含该记录的数据
         const task = res.data
+        console.log(task)
+        const check = (task.joined.length > 0) || (task._openid != id);
+        console.log(id)
+        console.log(task._openid)
+        console.log(check);
         child.setData({
-
+          disabled: true,
           show: true,
           location: task.location,
           dLocation: task.dLocation,
@@ -84,11 +89,6 @@ Page({
     })
     const child = this.selectComponent(".popWindow")
     // console.log(this.data.starred)
-    
-   
-  
-  
-    
   },
   onPullDownRefresh(){
     this.onLoad()
@@ -102,9 +102,6 @@ Page({
     })
     this.setShow()
     this.onLoad()
-    console.log("closed")
-    console.log(this.data.allCollections)
-    
   },
 
   handleunstar(){
@@ -142,15 +139,15 @@ Page({
     //   max_time -= 1
     // }
     // console.log(this.data.allCollections)
-    
-    
-    
+
   },
 
   setShow(){
     this.setData({
       show: true
     })
+    console.log("now set")
+    console.log(this.data.myPublish)
   },
   /**
    * Lifecycle function--Called when page load
@@ -254,26 +251,69 @@ Page({
     }
   },
   getOpenid: function() { 
-    let that = this;  
-    wx.login({success: function(res) { 
-      wx.request({     
-        url: 'https://norayuuu.github.io/',     
-        data: {appid: 'wx95bf8e473873b65d', 
-        secret: '05e4eefc3c4f9601b0f6c44558b70300', code: res.code},     
-        success: function(response) { 
-          console.log(response.data)
-          var openid = response.data.openid;      
-          console.log('请求获取openid:' + openid);      //可以把openid存到本地，方便以后调用
-          wx.setStorageSync('openid', openid);
-          that.setData({       
-            openid: openid
+   this.setData({
+     openid: wx.getStorageSync('info').openid
+   })
+  },
+   childDetail(e){
+      let childd = this.selectComponent(".popWindow");
+       var my_id = e.currentTarget.dataset.myid
+      //  wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
+       db.collection('tasks').doc(my_id).get({
+         success: function(res) {
+      //     // res.data 包含该记录的数据
+           const task = res.data
+           const check = (task.joined.length > 0) && (task._openid != this.data.openid);
+          childd.setData({
+            show: true,
+            mine:true,
+            disabled: check,
+            location: task.location,
+            dLocation: task.dLocation,
+            deadline: task.deadline,
+            numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
+            num: task.joined.length + 1 + '/' + task.numberOfPeople,
+            price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
+            restaurant: task.restaurant,
+            publishId:task._id
+          })
+        },
+        fail(e) {
+          console.log(e)
+        }
+       })
+    },
+    updateReload(){
+      db.collection('tasks').where({
+        _openid: this.data.openid
+      }).get({
+      }).then(res => {
+  
+      (async () => {
+        let p = await new Promise((resolve) => {
+          this.setData({
+            myPublish: res.data,
+            show: false
+          })
+          resolve(this.setData({
+            myPublish: res.data,
+            show: false
+          }))
+        });
+        this.selectComponent('.popWindow').setData({
+          show: false
         })
-       },
-       fail(response) {
-         console.log(response)
-       } 
-      })
-     }
+        this.onLoad()
+        this.setShow() 
+    })();
+    //   p.then(res => {
+    //     this.selectComponent('.popWindow').setData({
+    //       show: false
+    //     })
+    //     this.onLoad()
+    //     this.setShow() 
+    //   })
     })
-   }
+
+    }
 })
