@@ -24,19 +24,40 @@ Page({
   getCollections() {
     //1、引用数据库   
     //2、开始查询数据了  news对应的是集合的名称 
-    db.collection('collections').get({
-      //如果查询成功的话    
-      success: res => {
-        //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值
-        this.setData({
-          allCollections: res.data
+   
+    // db.collection('collections').get({
+    //   success: res => {
+    //     console.log(res)
+    //     this.setData({
+    //       allCollections: res.data
+    //     })
+    //   }
+    // })
+    db.collection('user_info').where({_openid: this.data.openid}).get({
+      success: res=>{
+        const userdata = res.data.pop()
+        const collections = userdata.taskid
+        var display_col = []
+        collections.forEach(element => {
+          console.log(element)
+          db.collection('tasks').doc(element).get({
+            success: res => {
+              display_col.push(res.data)
+              console.log(res.data)
+              this.setData({
+                allCollections: display_col
+              })
+            }
+          })
         })
-        // console.log("updated collections")
-        // console.log(res.data)
+        console.log(display_col)
+        this.setData({
+          allCollections: display_col
+        })
       }
-    });
-    this.getOpenid();
+    })
 
+    this.getOpenid()
     db.collection('tasks').where({
       _openid: this.data.openid
     }).get({
@@ -63,7 +84,7 @@ Page({
     wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
     console.log(my_id)
     const id = this.data.openid;
-    db.collection('collections').doc(my_id).get({
+    db.collection('tasks').doc(my_id).get({
       success: function(res) {
         // res.data 包含该记录的数据
         const task = res.data
@@ -273,6 +294,7 @@ Page({
      let that = this;
       let childd = this.selectComponent(".popWindow");
        var my_id = e.currentTarget.dataset.myid
+       console.log(my_id)
       const openID = wx.getStorageSync('info').openid;
     
       //  wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用

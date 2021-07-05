@@ -94,7 +94,7 @@ Component({
         var value = wx.getStorageSync('current_card') //获取当前点击卡片 
         console.log(this.data.pos)
         const db = wx.cloud.database()
-        db.collection('collections').doc(value).remove({
+        db.collection('collections').doc().remove({
           success: function(res) {
             // console.log(value._id)
             console.log('deleted')
@@ -120,25 +120,42 @@ Component({
       // console.log(this.restaurant)
       try {
         var value = wx.getStorageSync('task')
+        var my_id = wx.getStorageSync('info').openid
         if (value) {
           console.log(value)
           const db = wx.cloud.database()
-          db.collection('collections').add({
-            data:{
-              image: value.image,
-              restaurant: value.restaurant,
-              dLocation: value.dLocation,
-              price: value.price,
-              contact: value.contact,
-              numberOfPeople: value.numberOfPeople,
-              location: value.location,
-              deadline: value.deadline,
-              //in progress: -1, in progress: 0, complete: 1, not completed but expired: 2;
-              state: -1,
-              joined:[],
-              master_id: value._id
-            }
-          })
+          const p = new Promise(resolve => {
+            db.collection('user_info').where({_openid: my_id}).get({
+                success: function(res){
+                  resolve(res)
+                  console.log(res)
+                }
+              }
+            )})
+          p.then(res => {
+            
+            var userdata = res.data.pop()
+            console.log(userdata)
+            const col = userdata.taskid
+            console.log(col)
+            col.push(value._id)
+            console.log(col)
+            const p = new Promise(resolve => {
+              db.collection('user_info').where({_openid: my_id}).update({
+                data:{
+                  taskid: col
+                },
+                success: function(res) {
+                  console.log(res)
+                  resolve(res)
+                }
+              })
+            })
+            p.then(res=>{
+              console.log("updated")
+            })
+              
+            })
         }
         this.triggerEvent("click")
         this.setData({
@@ -146,7 +163,7 @@ Component({
         })
         wx.setStorageSync('collected', true)
       } catch (e) {
-        console.log(error)
+    
       }
       
     },

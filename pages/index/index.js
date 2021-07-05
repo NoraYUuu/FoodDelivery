@@ -113,10 +113,14 @@ onPullDownRefresh(){
 showDetail(e){
   var my_id = e.currentTarget.dataset.myid
   wx.setStorageSync('current_card', my_id)
-  db.collection('collections').where({master_id: my_id}).get({
+  var user_id = wx.getStorageSync('userinfo')
+  db.collection('user_info').where({_openid: user_id.openid}).get({
     success: res => {
-      if (res.data.length != 0) {
-        // console.log('exists')
+      var userdata = res.data.pop()
+      const collections = userdata.taskid
+      const included = collections.includes(my_id)
+      if (included) {
+        console.log('res')
         this.setData({
           starred: true
         })

@@ -31,8 +31,9 @@ Page({
     //app.globalData.userInfo = e.detail.userInfo;
     //console.log(app.globalData.userInfo);
     const db = wx.cloud.database()
-    db.collection('testDatabase').add({
+    db.collection('user_info').add({
       data: {
+        taskid:[],
         userinfo: userInfo,
       },
       success: res => {
