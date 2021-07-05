@@ -21,10 +21,17 @@
       <input class="{{disabled ? 'text' : 'highlight text'}}" disabled="{{disabled}}" value = "{{dLocation}}" bindinput="inputDLoc"></input>
       </view>
     </view>
-    <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cells weui-cells_after-title" wx:if="{{disabled}}">
       <view class="weui-cell weui-cell_input">
       <text class="title">人数:</text>
-      <input class="{{disabled ? 'text' : 'highlight text'}}" disabled="{{disabled}}" value = "{{numOfPpl}}" bindinput="inputPpl"></input>
+      <view class="text"  bindinput="inputPpl">{{numOfPpl}}</view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title" wx:if="{{!disabled}}">
+      <view class="weui-cell weui-cell_input">
+      <text class="title">人数: </text>
+      <text class="title">{{peopleJoined}}/</text>
+      <input class="highlight text numPpl" value = "{{totalNeeded}}" bindinput="inputPpl" placeholder="请输入2-6的整数"></input>
       </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
@@ -42,9 +49,10 @@
   </view>
     <text wx:if="{{!collected && !mine}}" bindtap="star" class="star">收藏</text>
     <text wx:if="{{collected && !mine}}" bindtap="unstar" class="star">取消收藏</text>
-    <text wx:if="{{mine}}" class="ok" bindtap="bindUpdate">更新</text>
-    <text wx:if="{{mine}}" class="ok" bindtap="bindDelete">删除</text>
-    <text wx:if="{{!mine}}" bindtap="ok" class="ok">加入拼团 </text>
+    <text wx:if="{{onlyMe && !fromIndex}}" class="ok" bindtap="bindUpdate">更新</text>
+    <text wx:if="{{onlyMe && !fromIndex}}" class="ok" bindtap="bindDelete">删除</text>
+    <text wx:if="{{!included}}" bindtap="joinGrp" class="ok">加入拼团 </text>
+    <text wx:if="{{included && !onlyMe}}" bindtap="leaveGrp" class="ok">退出拼团 </text>
     <text bindtap="ok" class="ok">关闭</text>
     <!-- <view>{{pos}}</view> -->
     

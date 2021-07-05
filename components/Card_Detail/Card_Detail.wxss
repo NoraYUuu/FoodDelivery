@@ -80,3 +80,9 @@
 .highlight{
   color: var(--themeColor);
 }
+
+.numPpl{
+  text-align: justify;
+  display: inline-block;
+  margin-left: -150rpx;
+}

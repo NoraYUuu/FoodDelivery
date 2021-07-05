@@ -104,6 +104,8 @@ Page({
         selectedArr: selected
       })
       const db = wx.cloud.database()
+      const myOpenId = wx.getStorageSync('info').openid;
+      
       db.collection('tasks').add({
         data:{
           restaurant: this.selectComponent('#search').data.inputValue,
@@ -115,7 +117,7 @@ Page({
           deadline: this.data.selectedArr[2],
           //in progress: -1, in progress: 0, complete: 1, not completed but expired: 2;
           state: -1,
-          joined:[],
+          joined:[myOpenId],
           image: this.data.resImage
         }
       }).then(

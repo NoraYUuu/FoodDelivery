@@ -1,4 +1,5 @@
 // components/Card_Detail/Card_Detail.js
+const db = wx.cloud.database();
 Component({
   /**
    * Component properties
@@ -19,6 +20,7 @@ Component({
    */
   data: {
     show:false,
+    totalNeeded:'',
     restaurant: '',
     deadline:'',
     location:'',
@@ -26,11 +28,15 @@ Component({
     price:'',
     numOfPpl:'',
     contact:'',
+    fromIndex:'',
     num:'',
     mine: false,
     disabled: true,
+    onlyMe: false,
     canBeUpdated: true,
-    publishId:''
+    publishId:'',
+    peopleJoined:'',
+    included:false
     // starred:false
   },
 
@@ -166,11 +172,10 @@ Component({
     inputPpl(e) {
       if (parseInt(e.detail.value) >= 2 && parseInt(e.detail.value) <= 6) {
       this.setData({
-        numOfPpl: e.detail.value
+        totalNeeded: e.detail.value
       })
-      console.log(this.data.numOfPpl)
     } else {
-      this.toastMsg("请输入2-6的整数")
+      // this.toastMsg("请输入2-6的整数")
     }
     },
     inputLoc(e){
@@ -186,9 +191,9 @@ Component({
     bindUpdate(e) {
       console.log('clicked')
       console.log(e)
-      if (this.data.canBeUpdated && this.data.numOfPpl == (this.data.num || '')) {
+      if (this.data.canBeUpdated && this.data.totalNeeded == (this.data.num || '')) {
         this.update(0);
-      } else if (this.data.canBeUpdated && parseInt((this.data.numOfPpl.substring(0, 1))) >= 2 && parseInt((this.data.numOfPpl.substring(0, 1))) <= 6 ) {
+      } else if (this.data.canBeUpdated && parseInt(this.data.totalNeeded) >= 2 && parseInt(this.data.totalNeeded) <= 6 ) {
         this.update(1);
       } else {
       this.toastMsg("update failed")
@@ -208,7 +213,7 @@ Component({
         const p = new Promise(resolve => {
           db.collection('tasks').doc(this.data.publishId).update({
             data: {
-              numberOfPeople: this.data.numOfPpl,
+              numberOfPeople: this.data.totalNeeded,
               deadline: this.data.deadline,
               location: this.data.location,
               dLocation: this.data.dLocation
@@ -250,6 +255,80 @@ Component({
             })});
         p.then(res => {this.triggerEvent("delete", this.data.inputValue)})
   },
+  joinGrp(e){
+    let that = this;
+
+   const p = new Promise(resolve => {
+      const join = wx.getStorageSync('current_joined');
+      join.push(wx.getStorageSync('info').openid)
+      console.log("join")
+      console.log(join)
+      db.collection('tasks').doc(this.data.publishId).update({
+        data: {
+          joined: join
+        },
+        success: function(res) {
+          that.setData({
+            included: true
+          })
+          wx.setStorageSync('current_joined', join)
+          resolve(res)
+        },
+        fail(res) {
+          console.log(res)
+        }
+      })
+   });
+  p.then(res =>   {
+    db.collection('tasks').doc(this.data.publishId).get().then(res2 => {console.log(res2)})
+  })
+
+  },
+  leaveGrp(e) {
+    let that = this;
+
+   const p = new Promise(resolve => {
+      const join = wx.getStorageSync('current_joined');
+      join.splice(join.indexOf(wx.getStorageSync('info').openid), 1);
+      
+      if (that.data.mine) {
+      db.collection('tasks').doc(this.data.publishId).update({
+        data: {
+          joined: join,
+          _openid: join[0]
+        },
+        success: function(res) {
+          that.setData({
+            included: false
+          })
+          resolve(res)
+        },
+        fail(res) {
+          console.log(res)
+        }
+      })} else {
+        db.collection('tasks').doc(this.data.publishId).update({
+          data: {
+            joined: join,
+          },
+          success: function(res) {
+            that.setData({
+              included: false
+            })
+            resolve(res)
+          },
+          fail(res) {
+            console.log(res)
+          }
+        })
+      }
+   });
+   p.then(res =>   {
+    db.collection('tasks').doc(this.data.publishId).get().then(res2 => {console.log(res2)})
+  })
+
+  }
+
 }
 })
 

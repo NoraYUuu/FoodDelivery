@@ -34,8 +34,8 @@
 
 <view class='a' wx:for="{{allTask}}"><!--wx:for是微信数据绑定的一种方式，该数组有多少数据就显示多少个view-->
     <!--index为每个数据对应的下标-->
-    <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
+    <card class="myCard" data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
     data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap="showDetail"
     data-img = "{{item.image}}"></card>
 </view>
-<popout collected = "{{starred}}" class="popWindow" bindclick = "handleclick"></popout>
+<popout collected = "{{starred}}" class="popWindow" bindclick = "handleclick" bindupdate="updateReload" binddelete="updateReload"></popout>

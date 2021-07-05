@@ -4,6 +4,7 @@ const db = wx.cloud.database({
   //这个是环境ID不是环境名称     
   env: 'cloud1-1gcwirla84b05897'
 })
+
 Page({
 
   /**
@@ -35,8 +36,7 @@ Page({
       }
     });
     this.getOpenid();
-    console.log(this.data.openid)
-    console.log('here')
+
     db.collection('tasks').where({
       _openid: this.data.openid
     }).get({
@@ -61,25 +61,32 @@ Page({
     
     // console.log(e.currentTarget)
     wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
-    // console.log(my_id)
+    console.log(my_id)
     const id = this.data.openid;
     db.collection('collections').doc(my_id).get({
       success: function(res) {
         // res.data 包含该记录的数据
         const task = res.data
-        console.log(task)
-        const check = (task.joined.length > 0) || (task._openid != id);
-        console.log(id)
-        console.log(task._openid)
-        console.log(check);
+  //todo : included 检测自己是否加入了拼团
+  //onlyMe: 团里只有我一个人
+  //fromIndex: 判断点击是否来自于主页（就算只有自己一个人在拼团里，只有在我发布的页面可以更新删除，index点击进去只可以查阅；如果不是自己的拼团，index点击进去可以加入拼团和收藏）
+  // mine: 是否是我发布的
+  //disabled: 是不是不让编辑（更新）， 只要不在我发布的 页面就不可以更新
+  //显示按钮的逻辑：主页：判断加入拼团/收藏拼团；如果是自己发布的，不可以收藏和加入
+  //如果是自己发布的，且没有其他人加入，只可以查阅；如果自己发布的且有人加入，可以选择退出拼团，此时团长成为array第一个人
+  //collection中我发布的：如果只有我一个人，有更新和删除按钮；如果有其他人加入，只可以退出拼团
+  //我的收藏：（理论上不可以收藏自己发布的拼团），可以选择取消收藏/加入和退出拼团
         child.setData({
-          mine:false,
+          onlyMe: false,
+          included: false,
+          fromIndex: false,
+          mine: false,
           disabled: true,
           show: true,
           location: task.location,
           dLocation: task.dLocation,
           deadline: task.deadline,
-          numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
+          numOfPpl: task.joined.length + '/' + task.numberOfPeople,
           price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
           restaurant: task.restaurant
         })
@@ -263,23 +270,35 @@ Page({
    })
   },
    childDetail(e){
+     let that = this;
       let childd = this.selectComponent(".popWindow");
        var my_id = e.currentTarget.dataset.myid
+      const openID = wx.getStorageSync('info').openid;
+    
       //  wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
        db.collection('tasks').doc(my_id).get({
          success: function(res) {
-      //     // res.data 包含该记录的数据
-           const task = res.data
-           const check = (task.joined.length > 0) && (task._openid != this.data.openid);
+          const task = res.data;
+          const mine = task._openid == openID;
+          const onlyMe = mine && (task.joined.length == 1);
+          const included = task.joined.includes(openID);
+          wx.setStorageSync('current_joined', task.joined);
+          // res.data 包含该记录的数据
+           const check = (task.joined.length > 1) || (!mine);
           childd.setData({
+            included: included,
+            peopleJoined:task.joined.length ,
+            totalNeeded:task.numberOfPeople,
+            fromIndex: false,
             show: true,
-            mine:true,
+            mine: mine,
+            onlyMe: onlyMe,
             disabled: check,
             location: task.location,
             dLocation: task.dLocation,
             deadline: task.deadline,
-            numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
-            num: task.joined.length + 1 + '/' + task.numberOfPeople,
+            numOfPpl: task.joined.length + '/' + task.numberOfPeople,
+            num: task.numberOfPeople,
             price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
             restaurant: task.restaurant,
             publishId:task._id

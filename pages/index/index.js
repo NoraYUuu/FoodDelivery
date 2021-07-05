@@ -28,6 +28,7 @@ Page({
     // this.getCateList();
     // this.getFloorList();
     this.getTask()
+    
   },
 
   // 获取轮播图数据
@@ -51,33 +52,56 @@ getTask() {
 
   that.getListCount().then(res => {
     let count = res;
-    that.setData({
-      allTask:[]
-    })
-    for (let i = 0; i < count ; i += 20) {
-        that.getListIndexSkip(i).then(res2 => {
-          //dunno y the data is not set properly
-          if (that.data.allTask.length < count-1) {
-          that.setData({
-              allTask: that.data.allTask.reverse().concat(res2.data).reverse()
-            })
-            console.log(that.data.allTask.length)
-            
-          } else {
-
-          }
-          }).catch(e => {
-            console.error(e)
-            reject("查询失败")
-          })
-          
-      }
-      console.log(that.data.allTaskStored)
+    let list = [];
+    // that.setData({
+    //   allTask:[]
+    // });
+    // let i = 0;
+    // while (i > count) {
+    //     that.getListIndexSkip(i).then(res2 => {
+    //       //dunno y the data is not set properly
+    //       list = list.reverse().concat(res2.data).reverse()
+    //       // console.log(list.length)
+    //       // console.log(count)
+    //       if (list.length == count) {
+    //       that.setData({
+    //           allTask: list
+    //         })
+    //         console.log("all tasks")
+    //         console.log(this.data.allTask)    
+    //       } else {
+    //       }
+    //       i += 20;
+    //       }).catch(e => {
+    //         console.error(e)
+    //         i+=20;
+    //         reject("查询失败")
+    //       }).finally(f => {
+    //         i+=20
+    //       })
+    //       // i+=20
+    //   }
+    this.recGetList(0, count).then(res => {
+      console.log('im here')
+      console.log(res)
+      list = res
+      that.setData({
+        allTask: []
+      })
+      that.setData({
+        allTask: list.reverse()
+      })
+      that.selectComponent(".myCard").setData({
+        mine: false
+      })
+      console.log(that.data.allTask)
+    });
+    
 
     }).catch(e => {
+      console.log(e);
       reject("failed")
-
-    })
+    }).catch(e => {})
   
   
   //2、开始查询数据了  news对应的是集合的名称   
@@ -91,7 +115,6 @@ showDetail(e){
   wx.setStorageSync('current_card', my_id)
   db.collection('collections').where({master_id: my_id}).get({
     success: res => {
-      console.log(res.data.length)
       if (res.data.length != 0) {
         // console.log('exists')
         this.setData({
@@ -103,24 +126,44 @@ showDetail(e){
           starred: false
         })
       }
+    },
+    fail: res => {
+      console.log(res)
     }
   })
-
   db.collection('tasks').doc(my_id).get({
     success: function(res) {
       // res.data 包含该记录的数据
-      const task = res.data
+      
+      const openID = wx.getStorageSync('info').openid;
+      const task = res.data;
+      const mine = task._openid == openID;
+      const onlyMe = mine && (task.joined.length == 1);
+      const included = task.joined.includes(openID);
+      console.log(included);
+      wx.setStorageSync('current_joined', task.joined);
+
       child.setData({
+        peopleJoined:task.joined.length ,
+        totalNeeded:task.numberOfPeople,
+        fromIndex: true,
         show: true,
+        included: included,
+        mine: mine,
+        onlyMe: onlyMe,
         location: task.location,
         dLocation: task.dLocation,
         deadline: task.deadline,
-        numOfPpl: task.joined.length + 1 + '/' + task.numberOfPeople,
+        numOfPpl: task.joined.length + '/' + task.numberOfPeople,
         price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
-        restaurant: task.restaurant
+        restaurant: task.restaurant,
+        publishId: task._id
       })
   
       wx.setStorageSync('task', task)
+    },
+    fail(e) {
+      console.log(e)
     }
 
     
@@ -167,21 +210,65 @@ getListCount() {
     })
   })
 },
-getListIndexSkip(skip) {
-  return new Promise((resolve, reject) => {
-    let selectPromise;	
-    if (skip > 0) {
-      selectPromise = db.collection('tasks').skip(skip).get()
-    } else {
-      //skip值为0时，会报错
-      selectPromise = db.collection('tasks').get()
-    }
-    selectPromise.then(res => {
-      resolve(res);
-    }).catch(e => {
-      console.error(e)
-      reject("查询失败!")
+
+recGetList(skip, count){
+  let selectPromise;
+  if (skip == 0) {
+    let list = [];
+    selectPromise = new Promise((resolve, reject) => {this.recGetList(20, count).then(res => {
+      db.collection('tasks').get().then(res2 => {
+        list = res2.data.concat(res);
+        resolve(list)
+      }).catch(res => {
+        reject(res);
+      })
+    }).catch (res => {
+      reject(res)
     })
   })
+
+  return selectPromise;
+  } else if (count - skip <= 20) {
+    let list = [];
+    selectPromise = new Promise((resolve, reject) => {db.collection('tasks').skip(skip).get().then(res => {
+      list = res.data;
+      resolve(list);
+    }).catch(res => {
+      reject(res)
+    })});
+
+    return selectPromise;
+  } else {
+    let list = [];
+    selectPromise = new Promise((resolve, reject) => {this.recGetList(skip + 20, count).then(res => {
+      db.collection('tasks').skip(skip).get().then(res2 => {
+        list = res2.data.concat(res);
+        resolve(list)
+      }).catch(res => {
+        reject(res);
+      })
+    }).catch (res => {
+      reject(res)
+    })
+  });
+    return selectPromise;
+  }
 }
+// getListIndexSkip(skip) {
+//   return new Promise((resolve, reject) => {
+//     let selectPromise;	
+//     if (skip > 0) {
+//       selectPromise = db.collection('tasks').skip(skip).get()
+//     } else {
+//       //skip值为0时，会报错
+//       selectPromise = db.collection('tasks').get()
+//     }
+//     selectPromise.then(res => {
+//       resolve(res);
+//     }).catch(e => {
+//       console.error(e)
+//       reject("查询失败!")
+//     })
+//   })
+// }
 })
