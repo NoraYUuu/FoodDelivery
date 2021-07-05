@@ -1,3 +1,29 @@
 view{
   color:var(--themeColor);
 }
+.goTop{
+  
+  height: 80rpx;
+  width: 80rpx;
+  position: fixed;
+  bottom: 50rpx;
+  background: rgba(0,0,0,.3);
+  right: 30rpx;
+  border-radius: 50%;
+}
+
+.alertChange{ 
+  height: 40rpx;
+  width: 730rpx;
+  text-align: center;
+  /* position: fixed; */
+  margin: 0 10rpx;
+  background: rgba(0,0,0,.3);
+  /* top: 420rpx; */
+  border-radius: 5%;
+  z-index: 99;
+}
+.sticky{
+  position: fixed;
+  top: 0rpx
+}

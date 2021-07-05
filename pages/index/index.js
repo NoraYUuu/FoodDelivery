@@ -11,10 +11,35 @@ Page({
     swiperList: [],
     allTask: [],
     starred: false,
-    totalTasks:''
+    totalTasks:'',
+    change: 0,
+    sticky: false,
+    firstTime: true
   },
   // 页面开始加载 就会触发
   onLoad: function (options) {
+    let that = this;
+    db.collection('tasks').where({
+      state:-1
+    }).watch({
+      onChange: function (snapshot) {
+        //监控数据发生变化时触发
+        if (that.data.firstTime) {
+          that.setData({
+            firstTime: false
+          })
+        } else {
+        const changes = that.data.change+1;
+        that.setData({
+          change: changes
+        })
+        //that.getTask();
+      }
+      },
+      onError:(err) => {
+        console.error(err)
+      }
+    })
     // // 1 发送异步请求获取轮播图数据  优化的手段可以通过es6的 promise来解决这个问题 
     // wx.request({
     //   url: 'https://haoyusimon.github.io/Data/index_banner.json',
@@ -44,10 +69,8 @@ Page({
 getTask() {
   //1、引用数据库   
   var that = this;
-  
-  const db = wx.cloud.database({
-    //这个是环境ID不是环境名称     
-    env: 'cloud1-1gcwirla84b05897'
+  that.setData({
+    change: 0
   })
 
   that.getListCount().then(res => {
@@ -192,7 +215,7 @@ handleclick(){
  
 },
 onShow() {
-  this.getTask()
+  // this.getTask()
 },
 
 /**
@@ -257,7 +280,52 @@ recGetList(skip, count){
   });
     return selectPromise;
   }
-}
+},
+   // 获取滚动条当前位置
+   onPageScroll: function (e) {
+    if (e.scrollTop > 100) {
+      this.setData({
+        floorstatus: true,
+      });
+     
+    } else {
+      this.setData({
+        floorstatus: false
+      });
+    }
+    const query = wx.createSelectorQuery().in(this);
+    query.select('.alertChange').boundingClientRect();
+    query.selectViewport().scrollOffset();
+    const that = this;
+    query.exec(function (res) {
+      // console.log(res[0])
+      if (res[0].top <= 0) {
+        that.setData({
+          sticky: true
+        })
+      } 
+      if (res[1].scrollTop < 188) {
+        that.setData({
+          sticky: false
+        })
+      }
+    })
+  },
+  goTop: function (e) {  
+    if (wx.pageScrollTo) {
+      wx.pageScrollTo({
+        scrollTop: 0
+      })
+      this.getTask();
+    } else {
+      wx.showModal({
+        title: '提示',
+        content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+      })
+    }
+  },
+
+
 // getListIndexSkip(skip) {
 //   return new Promise((resolve, reject) => {
 //     let selectPromise;	

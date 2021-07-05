@@ -1,3 +1,4 @@
+
 <view class="pyg_index">
   <!-- 搜索框 开始 -->
   <SearchInput></SearchInput>
@@ -31,7 +32,7 @@
   </view>
   <!-- 轮播图 结束 -->
 </view>
-
+<view class='{{sticky ? "sticky alertChange" : "alertChange"}}' bindtap="goTop" >当前{{change}}条更新</view>
 <view class='a' wx:for="{{allTask}}"><!--wx:for是微信数据绑定的一种方式，该数组有多少数据就显示多少个view-->
     <!--index为每个数据对应的下标-->
     <card class="myCard" data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
@@ -39,3 +40,5 @@
     data-img = "{{item.image}}"></card>
 </view>
 <popout collected = "{{starred}}" class="popWindow" bindclick = "handleclick" bindupdate="updateReload" binddelete="updateReload"></popout>
+
+
