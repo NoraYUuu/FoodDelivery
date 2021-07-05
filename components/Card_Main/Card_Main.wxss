@@ -12,7 +12,7 @@
  }
  .title{
    color: rgb(141,94,0);
-   overflow: scroll;
+   overflow: hidden;
    padding: 40rpx 20rpx 0rpx 160rpx;
    font-size: small;
   
