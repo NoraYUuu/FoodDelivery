@@ -21,7 +21,8 @@ Page({
           console.log("查询到用户未注册,即将为用户产生注册操作")
           DB.add({
             data: {
-              taskid: [],
+              taskid: [], // to store pintuan in collection
+              groupid: [], //to store ongoing pintuan / for groups
               userinfo: userInfo
             },
             complete: res => {
