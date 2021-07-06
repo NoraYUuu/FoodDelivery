@@ -130,9 +130,13 @@ Page({
             data: {
               'groupid': _.push(that.data.groupId)
             },
-            success: res => { console.log(res) },
+            success: res => { 
+              console.log(res) 
+              that.clear()
+            },
             fail: err => { console.log(err) }
           })
+          
         }
         //this.clear(); //成功之后清空数据（not working?）
       })//.then(this.clear())

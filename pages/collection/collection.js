@@ -20,7 +20,7 @@ Page({
     openid:'',
     len:0
   },
-  
+
   getCollections() {
     //1、引用数据库   
     //2、开始查询数据了  news对应的是集合的名称 
@@ -36,43 +36,60 @@ Page({
     this.getOpenid()
     let that = this;
     db.collection('user_info').where({_openid: this.data.openid}).get({
-      success: res=>{
+      success: async res=>{
         const userdata = res.data.pop()
-        const collections = userdata.taskid
+        let collections = userdata.taskid
+        let copy = userdata.taskid.slice()
+        console.log(copy)
         var display_col = []
         var ele = []
-        var skip = false;
-        for(let i = 0; i < collections.length; i++){
+        let skip = false
+        // var loop = 0
+        while(collections.length > 0){
           // console.log('element is ' + collections[i])
+          const element = collections.pop()
+          console.log(collections)
+          // console.log(copy)
           const p = new Promise((resolve, reject) => {
-            db.collection('tasks').doc(collections[i]).get({
+            db.collection('tasks').doc(element).get({
               success: res => {
                 // console.log(res.data)
                 resolve(res)
               },
-              fail(res) {
-                collections.splice(i, 1);
-                db.collection('user_info').where({_openid: that.data.openid}).update({
-                  data: {
-                    taskid: collections
-                  },
-                  success(res) {
-                    console.log(res)
-                  },
-                  fail(res) {
-                    console.log(res)
-                  }
-                })
-                console.log(collections)
-                that.getCollections()
-                // skip = true;
+              fail(res) { 
+                reject(res)
               }
             })
           })
-          display_col.push(p)
-          ele.push(collections[i])
+          console.log('processing')
+          
+          // let result = await p
+          // console.log(result)
+          
+          await p.then(
+            value => {
+              console.log('added')
+              display_col.push(value)
+              ele.push(element)
+            },
+            reason => {
+              const new_col = copy.filter(item => item != element)
+              console.log(new_col)
+              db.collection('user_info').where({_openid: that.data.openid}).update({
+                data: {
+                  taskid: new_col
+                },
+                success(res) {
+                  console.log(res)
+                },
+                fail(res) {
+                  console.log(res)
+                }
+              })
+            }
+          )
         }
-        // console.log(display_col)
+        console.log(display_col)
         console.log(ele)
         var col_data = []
         Promise.all(display_col).then((values) => {
