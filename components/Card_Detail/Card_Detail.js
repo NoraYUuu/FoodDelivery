@@ -64,56 +64,35 @@ Component({
     },
 
     unstar: function (){
-      if (this.data.pos=='index') {
-        var value = wx.getStorageSync('task')
-        console.log(this.data.pos)
-        const db = wx.cloud.database()
-        db.collection('collections').where({master_id:value._id}).remove({
-          success: function(res) {
-            // console.log(value._id)
-            console.log('deleted')
-            console.log(res.data)
-          }
-        })
-
-        this.setData({
-          collected: false
-        })
-        wx.setStorageSync('collected', false)
-        
-        wx.showToast({
-          title: '取消收藏成功',
-          icon: 'none',
-          duration: 1000,
-          mask:true
-        })
-        this.triggerEvent("unstar")
-    
-      }
-      else {
-        var value = wx.getStorageSync('current_card') //获取当前点击卡片 
-        console.log(this.data.pos)
-        const db = wx.cloud.database()
-        db.collection('collections').doc().remove({
-          success: function(res) {
-            // console.log(value._id)
-            console.log('deleted')
-            console.log(res.data)
-          }
-        }),
-        this.setData({
-          collected: false
-        })
-        
-        wx.setStorageSync('collected', false)
-        wx.showToast({
-          title: '取消收藏成功',
-          icon: 'none',
-          duration: 1000,
-          mask:true
-        })
-        this.triggerEvent("unstar")
-      }
+      var value = wx.getStorageSync('info')
+      var cur_task = wx.getStorageSync('current_card')
+      db.collection('user_info').where({_openid: value.openid}).get({
+        success: res => {
+          const collections = res.data[0].taskid
+          console.log(collections)
+          const new_col = collections.filter(task => task!=cur_task)
+          console.log(new_col)
+          db.collection('user_info').where({_openid: value.openid}).update({
+            data: {
+              taskid: new_col
+            }
+          })
+        }
+      })
+       
+      this.setData({
+        collected: false
+      })
+      
+      wx.setStorageSync('collected', false)
+      wx.showToast({
+        title: '取消收藏成功',
+        icon: 'none',
+        duration: 1000,
+        mask:true
+      })
+      this.triggerEvent("unstar")
+      
     },
 
     star: function () {

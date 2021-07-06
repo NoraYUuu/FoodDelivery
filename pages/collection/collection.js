@@ -38,22 +38,33 @@ Page({
         const userdata = res.data.pop()
         const collections = userdata.taskid
         var display_col = []
-        collections.forEach(element => {
-          console.log(element)
-          db.collection('tasks').doc(element).get({
-            success: res => {
-              display_col.push(res.data)
-              console.log(res.data)
-              this.setData({
-                allCollections: display_col
-              })
-            }
+        var ele = []
+        for(let i = 0; i < collections.length; i++){
+          // console.log('element is ' + collections[i])
+          const p = new Promise(resolve => {
+            db.collection('tasks').doc(collections[i]).get({
+              success: res => {
+                // console.log(res.data)
+                resolve(res)
+              }
+            })
+          })
+          display_col.push(p)
+          ele.push(collections[i])
+        }
+        // console.log(display_col)
+        // console.log(ele)
+        var col_data = []
+        Promise.all(display_col).then((values) => {
+          // console.log(values)
+          for (let i = 0; i < display_col.length; i++){
+            col_data.push(values[i].data)
+          }
+          this.setData({
+            allCollections: col_data
           })
         })
-        console.log(display_col)
-        this.setData({
-          allCollections: display_col
-        })
+      
       }
     })
 
@@ -134,15 +145,6 @@ Page({
   },
 
   handleunstar(){
-    // this.setData({
-    //   show: false
-    // })
-    // this.setShow()
-    // console.log("unstar")
-    // console.log("pressing unstar")
-    // var max_time = 6
-    // var len = this.data.allCollections.length
-    // console.log(len)
     const my_id = wx.getStorageSync('current_card')
     const index=this.data.allCollections.map(a=>a._id).indexOf(my_id)
     // console.log("index is " + index)
@@ -157,17 +159,8 @@ Page({
     this.setData({
       allCollections: oldcollection
     })
-    // while (max_time > 0 && len-1 != this.data.allCollections.length)
-    // {
-    //   console.log("length:")
-    //   console.log(this.data.allCollections.length)
-    //   this.setData({
-    //     len: this.data.allCollections.length
-    //   })
-    //   this.onLoad()
-    //   max_time -= 1
-    // }
-    // console.log(this.data.allCollections)
+
+   
 
   },
 
