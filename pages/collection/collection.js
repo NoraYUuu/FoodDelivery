@@ -63,6 +63,7 @@ Page({
                     console.log(res)
                   }
                 })
+                console.log(collections)
                 that.getCollections()
                 // skip = true;
               }
@@ -72,7 +73,7 @@ Page({
           ele.push(collections[i])
         }
         // console.log(display_col)
-        // console.log(ele)
+        console.log(ele)
         var col_data = []
         Promise.all(display_col).then((values) => {
           // console.log(values)
@@ -82,8 +83,11 @@ Page({
           this.setData({
             allCollections: col_data
           })
-        }). catch (res => console.log(res))
+        }).catch (res => console.log(res))
       
+      },
+      fail: res => {
+        console.log(res)
       }
     })
 

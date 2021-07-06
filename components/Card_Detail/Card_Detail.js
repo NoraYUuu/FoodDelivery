@@ -103,31 +103,38 @@ Component({
         if (value) {
           console.log(value)
           const db = wx.cloud.database()
-          const p = new Promise(resolve => {
+          const p = new Promise((resolve, reject)=> {
             db.collection('user_info').where({ _openid: my_id }).get({
               success: function (res) {
                 resolve(res)
+                console.log(res)
+              },
+              fail: function(res) {
+                reject(res)
                 console.log(res)
               }
             }
             )
           })
           p.then(res => {
-
             var userdata = res.data.pop()
-            console.log(userdata)
+            // console.log(userdata)
             const col = userdata.taskid
-            console.log(col)
+            // console.log(col)
             col.push(value._id)
-            console.log(col)
-            const p = new Promise(resolve => {
+            // console.log(col)
+            const p = new Promise((resolve,reject) => {
               db.collection('user_info').where({ _openid: my_id }).update({
                 data: {
                   taskid: col
                 },
                 success: function (res) {
-                  console.log(res)
+                  // console.log(res)
                   resolve(res)
+                },
+                fail: function(res) {
+                  console.log(res)
+                  reject(res)
                 }
               })
             })
