@@ -296,8 +296,9 @@ Component({
         success: function(res) {
           that.setData({
             included: false
-          })
-          resolve(res)
+          });
+          that.triggerEvent('leaveGrp', wx.getStorageSync('current_card'));
+          resolve(res);
         },
         fail(res) {
           console.log(res)

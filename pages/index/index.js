@@ -13,33 +13,11 @@ Page({
     starred: false,
     totalTasks:'',
     change: 0,
-    sticky: false,
-    firstTime: true
+    sticky: false
   },
   // 页面开始加载 就会触发
   onLoad: function (options) {
     let that = this;
-    db.collection('tasks').where({
-      state:-1
-    }).watch({
-      onChange: function (snapshot) {
-        //监控数据发生变化时触发
-        if (that.data.firstTime) {
-          that.setData({
-            firstTime: false
-          })
-        } else {
-        const changes = that.data.change+1;
-        that.setData({
-          change: changes
-        })
-        //that.getTask();
-      }
-      },
-      onError:(err) => {
-        console.error(err)
-      }
-    })
     // // 1 发送异步请求获取轮播图数据  优化的手段可以通过es6的 promise来解决这个问题 
     // wx.request({
     //   url: 'https://haoyusimon.github.io/Data/index_banner.json',
@@ -53,6 +31,20 @@ Page({
     // this.getCateList();
     // this.getFloorList();
     this.getTask()
+    db.collection('tasks').where({
+      state:-1
+    }).watch({
+      onChange: function (snapshot) {
+        //监控数据发生变化时触发
+        const changes = that.checkUpdate(snapshot.docChanges);
+        that.setData({
+          change: changes + that.data.change
+        })      
+      },
+      onError:(err) => {
+        console.error(err)
+      }
+    })
     
   },
 
@@ -105,8 +97,6 @@ getTask() {
     //       // i+=20
     //   }
     this.recGetList(0, count).then(res => {
-      console.log('im here')
-      console.log(res)
       list = res
       that.setData({
         allTask: []
@@ -117,7 +107,6 @@ getTask() {
       that.selectComponent(".myCard").setData({
         mine: false
       })
-      console.log(that.data.allTask)
     });
     
 
@@ -131,6 +120,9 @@ getTask() {
 },
 onPullDownRefresh(){
   this.getTask();
+  setTimeout(() => wx.stopPullDownRefresh({
+    success: (res) => {},
+  }), 500)
 },
 
 showDetail(e){
@@ -167,7 +159,6 @@ showDetail(e){
       const mine = task._openid == openID;
       const onlyMe = mine && (task.joined.length == 1);
       const included = task.joined.includes(openID);
-      console.log(included);
       wx.setStorageSync('current_joined', task.joined);
 
       child.setData({
@@ -200,7 +191,6 @@ showDetail(e){
 },
 
 handleclick(){
-  console.log("clicked")
   // const currentTask = wx.getStorageSync('task')
   // const child = this.selectComponent(".popWindow")
   // child.setData({
@@ -324,6 +314,15 @@ recGetList(skip, count){
       })
     }
   },
+  checkUpdate(arr) {
+    let total = 0;
+    for (let i = 0; i < arr.length; i+=1) {
+      if (arr[i].dataType == "remove" || arr[i].dataType == "add") {
+        total +=1;
+      }
+    }
+    return total;
+  }
 
 
 // getListIndexSkip(skip) {

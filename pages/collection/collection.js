@@ -93,7 +93,6 @@ Page({
     
     // console.log(e.currentTarget)
     wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
-    console.log(my_id)
     const id = this.data.openid;
     db.collection('tasks').doc(my_id).get({
       success: function(res) {
@@ -153,7 +152,6 @@ Page({
     // console.log(oldcollection)
     oldcollection.splice(index,1)
     // console.log("new collection is")
-    console.log(oldcollection)
     // var array = [1,2,3]
     // console.log(array.splice(0,1))
     this.setData({
@@ -168,8 +166,8 @@ Page({
     this.setData({
       show: true
     })
-    console.log("now set")
-    console.log(this.data.myPublish)
+    // console.log("now set")
+    // console.log(this.data.myPublish)
   },
   /**
    * Lifecycle function--Called when page load
@@ -208,7 +206,7 @@ Page({
    * Lifecycle function--Called when page show
    */
   onShow: function () {
-    console.log("shown")
+    // console.log("shown")
     this.getCollections();
     // this.setData({
     //   show: true
@@ -258,10 +256,10 @@ Page({
 
   },
   selected: function (e) {
-    console.log(e)
+    // console.log(e)
     let that = this
     let index = e.currentTarget.dataset.index
-    console.log(index)
+    // console.log(index)
     if (index == 0) {
       that.setData({
         selected: 0
@@ -325,6 +323,7 @@ Page({
        })
     },
     updateReload(){
+
       db.collection('tasks').where({
         _openid: this.data.openid
       }).get({
