@@ -33,19 +33,38 @@ Page({
     //     })
     //   }
     // })
+    this.getOpenid()
+    let that = this;
     db.collection('user_info').where({_openid: this.data.openid}).get({
       success: res=>{
         const userdata = res.data.pop()
         const collections = userdata.taskid
         var display_col = []
         var ele = []
+        var skip = false;
         for(let i = 0; i < collections.length; i++){
           // console.log('element is ' + collections[i])
-          const p = new Promise(resolve => {
+          const p = new Promise((resolve, reject) => {
             db.collection('tasks').doc(collections[i]).get({
               success: res => {
                 // console.log(res.data)
                 resolve(res)
+              },
+              fail(res) {
+                collections.splice(i, 1);
+                db.collection('user_info').where({_openid: that.data.openid}).update({
+                  data: {
+                    taskid: collections
+                  },
+                  success(res) {
+                    console.log(res)
+                  },
+                  fail(res) {
+                    console.log(res)
+                  }
+                })
+                that.getCollections()
+                // skip = true;
               }
             })
           })
@@ -63,12 +82,12 @@ Page({
           this.setData({
             allCollections: col_data
           })
-        })
+        }). catch (res => console.log(res))
       
       }
     })
 
-    this.getOpenid()
+
     db.collection('tasks').where({
       _openid: this.data.openid
     }).get({
