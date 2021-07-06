@@ -15,8 +15,8 @@ for (let i = 0; i <= 9; i++) {
 
 Page({
   data: {
-    cInput:'',
-    lInput:'',
+    cInput: '',
+    lInput: '',
     array: ['2', '3', '4', '5'],
     location: ['PGP', 'UTown', 'SOC', 'FOS'],
     index: 0,
@@ -29,14 +29,15 @@ Page({
     milicent: 0,
     multiArray: [dollars, cents, milicents],
     multiIndex: [0, 0, 0],
-    contact:"",
-    location:"",
-    selectedArr:[],
+    contact: "",
+    location: "",
+    selectedArr: [],
     inputValue: '',
     // 是否隐藏模糊查询的面板
     hideScroll: false,
     // 模糊查询结果
     searchTip: [],
+    groupId: '',
     resImage: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F17026bfe5d56794fff418a40195862b54c8f39ef46b2d-etk3LH_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626946341&t=f4a3beba6fc6a630f9a8eeca5b18ce03'
   },
   bindMoneyChange(e) {
@@ -53,7 +54,7 @@ Page({
       multiIndex: e.detail.value
     })
   },
-  bindConfirmListener: function(e) {
+  bindConfirmListener: function (e) {
     var that = this;
     const child = this.selectComponent('#selectt')
     const selected = child.data.searchParam;
@@ -62,52 +63,52 @@ Page({
         title: '人数/地点/时间为空',
         icon: 'none',
         duration: 1000,
-        mask:true
-    })
-    } else if (this.data.contact.length==0){
+        mask: true
+      })
+    } else if (this.data.contact.length == 0) {
       wx.showToast({
         title: '联系方式为空',
         icon: 'none',
         duration: 1000,
-        mask:true
-    })
-  } else if (this.data.contact.length<8) {
-    wx.showToast({
-      title: '请输入正确联系方式',
-      icon: 'none',
-      duration: 1000,
-      mask:true
-  })
-  } else if (this.data.location.length == 0) {
-    wx.showToast({
-      title: '领餐地址为空',
-      icon: 'none',
-      duration: 1000,
-      mask:true
-  })
-  } else if (this.data.multiIndex[0] == 0 && this.data.multiIndex[1] == 0 && this.data.multiIndex[2] == 0) {
-    wx.showToast({
-      title: '外卖金额为空',
-      icon: 'none',
-      duration: 1000,
-      mask:true
-  })
-  } else if (this.selectComponent('#search').data.inputValue == '') {
-    wx.showToast({
-      title: '请选择餐厅',
-      icon: 'none',
-      duration: 1000,
-      mask:true
-  })
-  } else {
+        mask: true
+      })
+    } else if (this.data.contact.length < 8) {
+      wx.showToast({
+        title: '请输入正确联系方式',
+        icon: 'none',
+        duration: 1000,
+        mask: true
+      })
+    } else if (this.data.location.length == 0) {
+      wx.showToast({
+        title: '领餐地址为空',
+        icon: 'none',
+        duration: 1000,
+        mask: true
+      })
+    } else if (this.data.multiIndex[0] == 0 && this.data.multiIndex[1] == 0 && this.data.multiIndex[2] == 0) {
+      wx.showToast({
+        title: '外卖金额为空',
+        icon: 'none',
+        duration: 1000,
+        mask: true
+      })
+    } else if (this.selectComponent('#search').data.inputValue == '') {
+      wx.showToast({
+        title: '请选择餐厅',
+        icon: 'none',
+        duration: 1000,
+        mask: true
+      })
+    } else {
       that.setData({
         selectedArr: selected
       })
       const db = wx.cloud.database()
       const myOpenId = wx.getStorageSync('info').openid;
-      
+
       db.collection('tasks').add({
-        data:{
+        data: {
           restaurant: this.selectComponent('#search').data.inputValue,
           dLocation: this.data.location,
           price: this.data.multiIndex,
@@ -117,61 +118,76 @@ Page({
           deadline: this.data.selectedArr[2],
           //in progress: -1, in progress: 0, complete: 1, not completed but expired: 2;
           state: -1,
-          joined:[myOpenId],
+          joined: [myOpenId],
           image: this.data.resImage
+        }, success(res) {
+          that.setData({
+            groupId: res._id
+          });
+
+          const _ = db.command;
+          db.collection('user_info').where({ _openid: myOpenId }).update({
+            data: {
+              'groupid': _.push(that.data.groupId)
+            },
+            success: res => { console.log(res) },
+            fail: err => { console.log(err) }
+          })
         }
-      }).then(
-        this.clear()
-        )
-  }
+        //this.clear(); //成功之后清空数据（not working?）
+      })//.then(this.clear())
+      //将taskid添加到userinfo的taskid array中
+
+
+    }
   },
-  locationInput: function(e) {
+  locationInput: function (e) {
     this.setData({
       location: e.detail.value
     })
   },
-  contactInput: function(e) {
+  contactInput: function (e) {
     this.setData({
       contact: e.detail.value
     })
   },
-  clear: function(e) {
-    
+  clear: function (e) {
+
     this.setData({
       multiIndex: [0, 0, 0],
-      contact:"",
-      location:"",
-      selectedArr:[],
-      cInput:'',
-      lInput:'',
+      contact: "",
+      location: "",
+      selectedArr: [],
+      cInput: '',
+      lInput: '',
       resImage: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F17026bfe5d56794fff418a40195862b54c8f39ef46b2d-etk3LH_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626946341&t=f4a3beba6fc6a630f9a8eeca5b18ce03'
     })
     this.selectComponent('#selectt').clear();
     this.selectComponent('#search').setData({
-      inputValue:''
+      inputValue: ''
     })
   },
   //search function
 
   getGuess() {
     const db = wx.cloud.database()
-  
+
     db.collection('Restaurants').where({
       name: db.RegExp({
-        regexp:this.data.inputValue,
+        regexp: this.data.inputValue,
         options: 'i'
       }),
     }).get()
-    .then(res => {
-      console.log('success guess')
-      this.setData({
-        searchTip: res.data
+      .then(res => {
+        console.log('success guess')
+        this.setData({
+          searchTip: res.data
+        })
+        this.checkHide()
       })
-      this.checkHide()
-    })
-    .catch(res => {
-      console.log('failed guess', res)
-    })
+      .catch(res => {
+        console.log('failed guess', res)
+      })
   },
   handleItemChange(e) {
     this.setData({
@@ -182,11 +198,11 @@ Page({
   checkHide() {
     if (this.data.inputValue === '') {
       this.setData({
-        hideScroll:true
+        hideScroll: true
       })
     } else {
       this.setData({
-        hideScroll:false
+        hideScroll: false
       })
     }
   },
@@ -200,7 +216,7 @@ Page({
       resImage: e.currentTarget.dataset.img
     })
     this.setData({
-      hideScroll:true
+      hideScroll: true
     })
   }
 })
