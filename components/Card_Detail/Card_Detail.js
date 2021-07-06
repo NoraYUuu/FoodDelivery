@@ -242,16 +242,28 @@ Component({
       }
     },
     bindDelete(e) {
+      let self = this;
       const db = wx.cloud.database();
       const p = new Promise(resolve => {
         db.collection('tasks').doc(this.data.publishId).remove({
           success(res) {
-            resolve(res);
+            console.log(res);
             console.log("deleted");
+            const _ = db.command;
+            const openid = wx.getStorageSync('info').openid
+            db.collection('user_info').where({ _openid: openid }).update({
+              data: {
+                'groupid': _.pullAll([self.data.publishId,])
+              },
+              success: res => { console.log(res) },
+              fail: err => { console.log(err) }
+            })
           }
         })
       });
-      p.then(res => { this.triggerEvent("delete", this.data.inputValue) })
+      p.then(res => {
+        this.triggerEvent("delete", this.data.inputValue);
+      })
     },
     joinGrp(e) {
       let that = this;
