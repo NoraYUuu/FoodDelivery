@@ -32,3 +32,14 @@
 .tab_view{
   width:100%;
 }
+.createNew{
+    height: 80rpx;
+    width: 80rpx;
+    position: fixed;
+    margin: 0 10rpx;
+    background: rgba(0,0,0,.3);
+    bottom: 20rpx;
+    right:20rpx;
+    border-radius: 50%;
+    z-index: 99;
+}

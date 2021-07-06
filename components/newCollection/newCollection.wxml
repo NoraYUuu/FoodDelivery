@@ -1,0 +1,45 @@
+<view class="mask" catchtouchmove="preventTouchMove" wx:if="{{show}}"></view>
+<!-- 弹出层 -->
+<view class="modalDlg" wx:if="{{show}}">
+<!-- 二维码或其他图片 -->
+  <view>
+    <!-- Begin Search-->
+    <Search id='search' data-content = "选择餐厅" value="{{inputValue}}" focus='true' confirm-type="search" bindinput="onInput" bindinputGet='handleItemChange'></Search>
+    <!-- End Search-->
+  </view>
+    <scroll-view scroll-y="true" class="search-res" hidden="{{hideScroll}}">
+        <block wx:for="{{searchTip}}" wx:key="content" wx:for-item="item"> 
+            <view class="tip-item" bindtap="itemTap" data-position = "{{item.foodpandaLink}}"
+            data-id = "{{item._id}}" data-name = "{{item.name}}" data-img = "{{item.Image_URL}}">
+                <view class="left">
+                    <view class="content">
+                        {{item.name}}
+                    </view>
+                </view>
+            </view>
+        </block>
+    </scroll-view>
+
+    <view class="rImg">
+      <image class="rImg" mode="aspectFit"  src="{{resImage}}" />
+    </view>
+
+    <picker class="choose" bindchange="locationChange" value="{{index}}" range="{{array}}">
+    <view class="picker">
+      地点： {{array[index]}}
+    </view>
+  </picker>
+      <picker class="choose" mode="time" value="{{time}}" bindchange="bindTimeChange">
+      <view class="picker">
+        开始时间： {{time}}
+      </view>
+    </picker>
+      <picker class="choose" mode="time" value="{{time2}}" bindchange="bindTimeChange2">
+      <view class="picker">
+        结束时间： {{time2}}
+      </view>
+    </picker>
+
+    <text bindtap="confirm" class="ok">确认 </text>
+    <text bindtap="close" class="ok">关闭</text>
+</view>

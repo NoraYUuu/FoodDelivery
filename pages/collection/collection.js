@@ -355,5 +355,10 @@ Page({
     //   })
     })
 
+    },
+    createNew(e){
+      this.selectComponent(".newCollection").setData({
+        show: true
+      })
     }
 })
