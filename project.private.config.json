@@ -41,6 +41,12 @@
           "pathName": "pages/chatgroup/chatgroup",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "收藏",
+          "pathName": "pages/collection/collection",
+          "query": "",
+          "scene": null
         }
       ]
     }
