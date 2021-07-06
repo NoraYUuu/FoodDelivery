@@ -7,27 +7,6 @@ App({
   //新增globalData
 
   onLaunch: function () {
-    //this.extendDateFormat();
-    //建立连接
-    /* this.globalData.goEasy.connect({
-      onSuccess: function () {
-        console.log("GoEasy connect successfully.")
-      },
-      onFailed: function (err) {
-        console.log("Failed to connect to GoEasy, code: " + err.code + ", error:" + err.content);
-        wx.showModal({
-          icon: "none",
-          title: err.code.toString(),
-          content: err.content,
-          showCancel: false,
-          duration: 6000
-        });
-      },
-      onProgress: function (attemps) {
-        console.log("GoEasy is connecting", attemps);
-      }
-    }); */
-    //连接GoEasy
 
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []

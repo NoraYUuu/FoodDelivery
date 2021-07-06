@@ -24,19 +24,51 @@ Page({
   getCollections() {
     //1、引用数据库   
     //2、开始查询数据了  news对应的是集合的名称 
-    db.collection('collections').get({
-      //如果查询成功的话    
-      success: res => {
-        //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值
-        this.setData({
-          allCollections: res.data
+   
+    // db.collection('collections').get({
+    //   success: res => {
+    //     console.log(res)
+    //     this.setData({
+    //       allCollections: res.data
+    //     })
+    //   }
+    // })
+    db.collection('user_info').where({_openid: this.data.openid}).get({
+      success: res=>{
+        const userdata = res.data.pop()
+        const collections = userdata.taskid
+        var display_col = []
+        var ele = []
+        for(let i = 0; i < collections.length; i++){
+          // console.log('element is ' + collections[i])
+          const p = new Promise(resolve => {
+            db.collection('tasks').doc(collections[i]).get({
+              success: res => {
+                // console.log(res.data)
+                resolve(res)
+              }
+            })
+          })
+          display_col.push(p)
+          ele.push(collections[i])
+        }
+        // console.log(display_col)
+        // console.log(ele)
+        var col_data = []
+        Promise.all(display_col).then((values) => {
+          // console.log(values)
+          for (let i = 0; i < display_col.length; i++){
+            col_data.push(values[i].data)
+          }
+          this.setData({
+            allCollections: col_data
+          })
         })
-        // console.log("updated collections")
-        // console.log(res.data)
+      
       }
-    });
-    this.getOpenid();
+    })
 
+    this.getOpenid()
     db.collection('tasks').where({
       _openid: this.data.openid
     }).get({
@@ -62,7 +94,7 @@ Page({
     // console.log(e.currentTarget)
     wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
     const id = this.data.openid;
-    db.collection('collections').doc(my_id).get({
+    db.collection('tasks').doc(my_id).get({
       success: function(res) {
         // res.data 包含该记录的数据
         const task = res.data
@@ -112,15 +144,6 @@ Page({
   },
 
   handleunstar(){
-    // this.setData({
-    //   show: false
-    // })
-    // this.setShow()
-    // console.log("unstar")
-    // console.log("pressing unstar")
-    // var max_time = 6
-    // var len = this.data.allCollections.length
-    // console.log(len)
     const my_id = wx.getStorageSync('current_card')
     const index=this.data.allCollections.map(a=>a._id).indexOf(my_id)
     // console.log("index is " + index)
@@ -134,17 +157,8 @@ Page({
     this.setData({
       allCollections: oldcollection
     })
-    // while (max_time > 0 && len-1 != this.data.allCollections.length)
-    // {
-    //   console.log("length:")
-    //   console.log(this.data.allCollections.length)
-    //   this.setData({
-    //     len: this.data.allCollections.length
-    //   })
-    //   this.onLoad()
-    //   max_time -= 1
-    // }
-    // console.log(this.data.allCollections)
+
+   
 
   },
 
@@ -271,6 +285,7 @@ Page({
      let that = this;
       let childd = this.selectComponent(".popWindow");
        var my_id = e.currentTarget.dataset.myid
+       console.log(my_id)
       const openID = wx.getStorageSync('info').openid;
     
       //  wx.setStorageSync('current_card', my_id) //存储当前点击卡片信息 供组件使用
