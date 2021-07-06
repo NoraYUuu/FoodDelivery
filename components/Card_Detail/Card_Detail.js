@@ -247,6 +247,7 @@ Component({
       const p = new Promise(resolve => {
         db.collection('tasks').doc(this.data.publishId).remove({
           success(res) {
+            resolve(res);
             console.log(res);
             console.log("deleted");
             const _ = db.command;
@@ -319,6 +320,7 @@ Component({
               _openid: join[0]
             },
             success: function (res) {
+              resolve(res);
               that.setData({
                 included: false
               });
@@ -333,7 +335,7 @@ Component({
                 success: res => { console.log(res) },
                 fail: err => { console.log(err) }
               })
-              resolve(res);
+
             },
             fail(res) {
               console.log(res)
