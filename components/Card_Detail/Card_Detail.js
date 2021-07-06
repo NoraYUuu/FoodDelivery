@@ -323,6 +323,16 @@ Component({
                 included: false
               });
               that.triggerEvent('leaveGrp', wx.getStorageSync('current_card'));
+
+              const _ = db.command;
+              const openid = wx.getStorageSync('info').openid
+              db.collection('user_info').where({ _openid: openid }).update({
+                data: {
+                  'groupid': _.pull(that.data.publishId)
+                },
+                success: res => { console.log(res) },
+                fail: err => { console.log(err) }
+              })
               resolve(res);
             },
             fail(res) {
