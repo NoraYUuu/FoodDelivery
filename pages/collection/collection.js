@@ -44,6 +44,7 @@ Page({
         let display_col = []
         let ele = []
         let skip = false
+        let new_col = []
         // var loop = 0
         while(collections.length > 0){
           // console.log('element is ' + collections[i])
@@ -81,27 +82,34 @@ Page({
             },
             reason=>{
               console.log('deleted')
-              const new_col = copy.filter(item => item!= ele[0])
-              db.collection('user_info').where({_openid: that.data.openid}).update({
-                data: {
-                  taskid: new_col
-                },
-                success(res) {
-                  console.log(res)
-                },
-                fail(res) {
-                  console.log(res)
-                }
-              })
+              copy = copy.filter(item => item!= ele[0])
+              console.log(copy)
+              
             }
           )
+          
           ele = ele.slice(1)
           display_col = display_col.slice(1)
+          if (display_col.length == 0) {
+                
+            db.collection('user_info').where({_openid: that.data.openid}).update({
+              data: {
+                taskid: copy
+              },
+              success(res) {
+                console.log(res)
+              },
+              fail(res) {
+                console.log(res)
+              }
+            })
+          }
         }
         console.log(resolved_list)
         this.setData({
           allCollections: resolved_list
         })
+
       },
       fail: res => {
         console.log(res)
