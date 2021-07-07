@@ -1,5 +1,3 @@
-// pages/collection/collection.js
-
 const db = wx.cloud.database({
   //这个是环境ID不是环境名称     
   env: 'cloud1-1gcwirla84b05897'
@@ -53,8 +51,15 @@ Page({
                   newCollectionId[pos] = res[j].data._id
                 }
                 console.log(final)
-                final.filter(e => e != undefined)
-                newCollectionId.filter(e => e != undefined)
+                final = final.filter(el => {
+                  return el != null && el != undefined;
+                });
+
+                newCollectionId = newCollectionId.filter(el => {
+                  return el != null && el != undefined;
+                });
+                
+
                 that.setData({
                   allCollections: final
                 })

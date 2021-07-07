@@ -21,7 +21,12 @@ Page({
 		let self = this;
 		let userInfo = wx.getStorageSync('userinfo');
 		let openid = wx.getStorageSync('info').openid;
-		let groupid = wx.getStorageSync('userDetails').groupid;
+		db.collection("user_info").where({ _openid: openid }).get().then(res => {
+			this.setData({
+				groupId: res.data[0].groupid
+			})
+		}).catch(err => { console.log(err) })
+		//let groupid = wx.getStorageSync('userDetails').groupid;
 		//console.log(groupid);
 		if (!userInfo) {
 			wx.showToast({
@@ -32,9 +37,7 @@ Page({
 			self.setData({
 				yourname: userInfo.nickName,
 				openId: openid,
-				groupId: groupid
 			})
-			//console.log(self.data.groupId)
 		}
 	},
 
