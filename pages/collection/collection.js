@@ -41,68 +41,94 @@ Page({
         let newCol = collections;
         var display_col = []
         var i = 0;
-        let final=[];
+        let col_data=[];
         let newCollectionId=[];
-        that.recGetCol(0, collections).then(res => 
-          { for (let j = 0; j < res.length; j+=1) {
-                  const pos = newCol.indexOf(res[j].data._id)
-                  final[pos] = res[j].data
-                  console.log(final[pos])
-                  newCollectionId[pos] = res[j].data._id
-                }
-                console.log(final)
-                final = final.filter(el => {
+        for (let i = 0; i < collections.length; i+=1) {
+          const p = new Promise((resolve, reject) => {
+            db.collection('tasks').doc(collections[i]).get({
+              success: res => {
+                resolve(res)
+              },
+              fail(res) {
+                resolve([])
+              }
+            })
+          })    
+          display_col.push(p)
+      }
+        Promise.all(display_col).then((values) => {
+          // console.log(values)
+          for (let i = 0; i < display_col.length; i++){
+            col_data.push(values[i].data)
+            if (values[i].length == 0) {
+              newCollectionId.push(undefined)
+            } else {
+              console.log(values[i])
+            newCollectionId.push(values[i].data._id)
+            }
+          }
+          col_data = col_data.filter(el => {
                   return el != null && el != undefined;
                 });
+          newCollectionId = newCollectionId.filter(el => {
+            return el != null && el != undefined;
+          });
+          that.setData({
+            allCollections: col_data
+          })
+        
 
-                newCollectionId = newCollectionId.filter(el => {
-                  return el != null && el != undefined;
-                });
+          db.collection('user_info').where({_openid: that.data.openid}).update({
+                          data: {
+                            taskid: newCollectionId
+                          },
+                          success(res) {
+                            console.log(res)
+                          },
+                          fail(res) {
+                            console.log(res)
+                          }
+                        })
+
+        }). catch (res => console.log(res))
+
+        // that.recGetCol(0, collections).then(res => 
+        //   { for (let j = 0; j < res.length; j+=1) {
+        //           const pos = newCol.indexOf(res[j].data._id)
+        //           final[pos] = res[j].data
+        //           console.log(final[pos])
+        //           newCollectionId[pos] = res[j].data._id
+        //         }
+        //         console.log(final)
+        //         final = final.filter(el => {
+        //           return el != null && el != undefined;
+        //         });
+
+        //         newCollectionId = newCollectionId.filter(el => {
+        //           return el != null && el != undefined;
+        //         });
                 
 
-                that.setData({
-                  allCollections: final
-                })
-                db.collection('user_info').where({_openid: that.data.openid}).update({
-                      data: {
-                        taskid: newCollectionId
-                      },
-                      success(res) {
-                        console.log(res)
-                      },
-                      fail(res) {
-                        console.log(res)
-                      }
-                    })
-              })
-    //   let final = [];
-    //   (async () => {
-    //     const p = await pro;
-    //     console.log("hello")
-    //     console.log(p);
-    //     for (let j = 0; j < display_col.length; j+=1) {
-    //       const pos = newCol.indexOf(display_col[i].data._id)
-    //       final[pos] = display_col[j]
-    //     }
-    //     final.filter(Boolean)
-    //     console.log(final)
-    // })();
+        //         that.setData({
+        //           allCollections: final
+        //         })
+        //         db.collection('user_info').where({_openid: that.data.openid}).update({
+        //               data: {
+        //                 taskid: newCollectionId
+        //               },
+        //               success(res) {
+        //                 console.log(res)
+        //               },
+        //               fail(res) {
+        //                 console.log(res)
+        //               }
+        //             })
+        //       })
+
 
  
         
-      //   if (proceed) {
-      //   db.collection('user_info').where({_openid: that.data.openid}).update({
-      //     data: {
-      //       taskid: collections
-      //     },
-      //     success(res) {
-      //       console.log(res)
-      //     },
-      //     fail(res) {
-      //       console.log(res)
-      //     }
-      //   })
-      // }
+  
         // console.log(display_col)
         // console.log(ele)
         // var col_data = []
