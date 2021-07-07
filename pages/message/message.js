@@ -1,16 +1,41 @@
+
+const db = wx.cloud.database()
+
 Page({
 	data: {
 		search_btn: true,
 		search_chats: false,
 		show_mask: false,
 		yourname: "",
-		unReadSpotNum: 0,
-		unReadNoticeNum: 0,
-		messageNum: 0,
-		unReadTotalNotNum: 0,
-		arr: [],
+		openId: "",
+		//unReadSpotNum: 0,
+		//unReadNoticeNum: 0,
+		//messageNum: 0,
+		//unReadTotalNotNum: 0,
+		groupId: [],
 		show_clear: false,
 		groupName: {}
+	},
+
+	onShow() {
+		let self = this;
+		let userInfo = wx.getStorageSync('userinfo');
+		let openid = wx.getStorageSync('info').openid;
+		let groupid = wx.getStorageSync('userDetails').groupid;
+		//console.log(groupid);
+		if (!userInfo) {
+			wx.showToast({
+				title: '请先登录',
+				duration: 1000,
+			})
+		} else {
+			self.setData({
+				yourname: userInfo.nickName,
+				openId: openid,
+				groupId: groupid
+			})
+			//console.log(self.data.groupId)
+		}
 	},
 
 	openSearch: function () {
@@ -90,9 +115,12 @@ Page({
 	},
 
 	//跳转到聊天室
-	toSay() {
+	toChat: function (event) {
+
+		let detail = event.currentTarget.dataset.item;
+		console.log(event.currentTarget.dataset.item);
 		wx.navigateTo({
-			url: '../chatgroup/chatgroup',
+			url: '../chatgroup/chatgroup?groupId=' + detail, //need to stringify or not?
 		})
 	}
 })

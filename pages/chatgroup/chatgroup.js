@@ -38,12 +38,13 @@ Page({
     isTabs: '',
     isOn: false,
     scrollTop: 0,
-    isIphoneX: '',
-    into: '',
+    //isIphoneX: '',
+    //into: '',
     Height: '',
     info: {}, //自己的openid
     user_value: '',
     info_list: [],
+    groupId: '',
     emoji_list: [{
       name: '[微笑]',
       imgSrc: '../../images/emoji/1.png'
@@ -109,6 +110,7 @@ Page({
         avatarUrl: userInfo.avatarUrl, //头像
         nickName: userInfo.nickName, //昵称
         value: _this.data.user_value, //消息内容
+        groupid: _this.data.groupId
       },
       success(res) {
         console.log(res)
@@ -124,14 +126,15 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
     var _this = this;
     //var info = wx.getStorageSync('userinfo');
     var _info = wx.getStorageSync('info'); //store openId
     //console.log(_info);
     _this.setData({
-      info: _info
+      info: _info,
+      groupId: options.groupId
     })
+    //console.log(this.data.groupId);
     const query = wx.createSelectorQuery()
     query.select('.page2').boundingClientRect()
     query.selectViewport().scrollOffset()
@@ -158,10 +161,19 @@ Page({
     var _this = this;
     DB.watch({
       onChange: (res) => {
-        // console.log(res.docs)
+        //遍历res.docs来找到所有当下groupid的消息
+        //console.log(res.docs)
+        let allMsg = res.docs;
+        let groupid = _this.data.groupId
+        let list = []
+        for (var i = 0, len = allMsg.length; i < len; i++) {
+          if (allMsg[i].groupid == groupid) {
+            list.push(allMsg[i])
+          }
+        }
         _this.setData({
-          info_list: res.docs,
-          into: res.docs[res.docs.length - 1]._id
+          info_list: list,
+          //into: res.docs[res.docs.length - 1]._id
         })
       },
       onError(err) {
@@ -183,6 +195,7 @@ Page({
         avatarUrl: userInfo.avatarUrl, //头像
         nickName: userInfo.nickName, //昵称
         emoji: src, //消息内容
+        groupid: _this.data.groupId
       },
       success(res) {
 
