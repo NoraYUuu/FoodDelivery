@@ -35,78 +35,86 @@ Page({
     // })
     this.getOpenid()
     let that = this;
+    
     db.collection('user_info').where({_openid: this.data.openid}).get({
-      success: async res=>{
+      success: res=>{
         const userdata = res.data.pop()
-        let collections = userdata.taskid
-        let copy = userdata.taskid.slice()
-        console.log(copy)
+        const collections = userdata.taskid
+        let newCol = collections;
         var display_col = []
-        var ele = []
-        let skip = false
-        // var loop = 0
-        while(collections.length > 0){
-          // console.log('element is ' + collections[i])
-          const element = collections.pop()
-          console.log(collections)
-          // console.log(copy)
-          const p = new Promise((resolve, reject) => {
-            db.collection('tasks').doc(element).get({
-              success: res => {
-                // console.log(res.data)
-                resolve(res)
-              },
-              fail(res) { 
-                reject(res)
-              }
-            })
-          })
-          console.log('processing')
-          
-          // let result = await p
-          // console.log(result)
-          
-          await p.then(
-            value => {
-              console.log('added')
-              display_col.push(value)
-              ele.push(element)
-            },
-            reason => {
-              const new_col = copy.filter(item => item != element)
-              console.log(new_col)
-              db.collection('user_info').where({_openid: that.data.openid}).update({
-                data: {
-                  taskid: new_col
-                },
-                success(res) {
-                  console.log(res)
-                },
-                fail(res) {
-                  console.log(res)
+        var i = 0;
+        let final=[];
+        let newCollectionId=[];
+        that.recGetCol(0, collections).then(res => 
+          { for (let j = 0; j < res.length; j+=1) {
+                  const pos = newCol.indexOf(res[j].data._id)
+                  final[pos] = res[j].data
+                  console.log(final[pos])
+                  newCollectionId[pos] = res[j].data._id
                 }
+                console.log(final)
+                final.filter(e => e != undefined)
+                newCollectionId.filter(e => e != undefined)
+                that.setData({
+                  allCollections: final
+                })
+                db.collection('user_info').where({_openid: that.data.openid}).update({
+                      data: {
+                        taskid: newCollectionId
+                      },
+                      success(res) {
+                        console.log(res)
+                      },
+                      fail(res) {
+                        console.log(res)
+                      }
+                    })
               })
-            }
-          )
-        }
-        console.log(display_col)
-        console.log(ele)
-        var col_data = []
-        Promise.all(display_col).then((values) => {
-          // console.log(values)
-          for (let i = 0; i < display_col.length; i++){
-            col_data.push(values[i].data)
-          }
-          this.setData({
-            allCollections: col_data
-          })
-        }).catch (res => console.log(res))
+    //   let final = [];
+    //   (async () => {
+    //     const p = await pro;
+    //     console.log("hello")
+    //     console.log(p);
+    //     for (let j = 0; j < display_col.length; j+=1) {
+    //       const pos = newCol.indexOf(display_col[i].data._id)
+    //       final[pos] = display_col[j]
+    //     }
+    //     final.filter(Boolean)
+    //     console.log(final)
+    // })();
+
+ 
+        
+      //   if (proceed) {
+      //   db.collection('user_info').where({_openid: that.data.openid}).update({
+      //     data: {
+      //       taskid: collections
+      //     },
+      //     success(res) {
+      //       console.log(res)
+      //     },
+      //     fail(res) {
+      //       console.log(res)
+      //     }
+      //   })
+      // }
+        // console.log(display_col)
+        // console.log(ele)
+        // var col_data = []
+        // Promise.all(display_col).then((values) => {
+        //   // console.log(values)
+        //   for (let i = 0; i < display_col.length; i++){
+        //     col_data.push(values[i].data)
+        //   }
+        //   this.setData({
+        //     allCollections: col_data
+        //   })
+        // }). catch (res => console.log(res))
       
-      },
-      fail: res => {
-        console.log(res)
       }
     })
+
+
 
 
     db.collection('tasks').where({
@@ -400,5 +408,40 @@ Page({
       this.selectComponent(".newCollection").setData({
         show: true
       })
+    },
+    recGetCol(pos, collections) {
+      if (pos == collections.length - 1) {
+        const p = new Promise((resolve, reject) => 
+        db.collection('tasks').doc(collections[pos]).get({
+          success: res => {
+            const arr = [];
+            arr.push(res)
+            resolve(arr)
+          },
+          fail(res) {
+            resolve([])
+            console.log(res)
+          }
+        })
+      )
+      return p;
+      } else {
+      const p = new Promise((resolve, reject) => 
+      this.recGetCol(pos + 1, collections).then (res2 => {
+        db.collection('tasks').doc(collections[pos]).get({
+          success: res => {
+            res2.push(res)
+            console.log("he")
+            resolve(res2)
+          },
+          fail(res) {
+            resolve(res2)
+            console.log(res)
+          }
+        })
+      })
+      )
+      return p;
     }
+  }
 })
