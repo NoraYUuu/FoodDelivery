@@ -41,8 +41,8 @@ Page({
         let collections = userdata.taskid
         let copy = userdata.taskid.slice()
         console.log(copy)
-        var display_col = []
-        var ele = []
+        let display_col = []
+        let ele = []
         let skip = false
         // var loop = 0
         while(collections.length > 0){
@@ -62,19 +62,26 @@ Page({
             })
           })
           console.log('processing')
-          
-          // let result = await p
-          // console.log(result)
-          
-          await p.then(
+          display_col.push(p)
+          ele.push(element)
+        }
+        // await display_col[display_col.length-1]
+        console.log("received")
+        console.log(display_col)
+        // display_col = display_col.slice(1)
+        // console.log(display_col)
+        let resolved_list = []
+        while(display_col.length > 0) {
+          await display_col[0].then(
             value => {
               console.log('added')
-              display_col.push(value)
-              ele.push(element)
+              // console.log(value.data)
+              resolved_list.push(value.data)
+              console.log(resolved_list)
             },
-            reason => {
-              const new_col = copy.filter(item => item != element)
-              console.log(new_col)
+            reason=>{
+              console.log('deleted')
+              const new_col = copy.filter(item => item!= ele[0])
               db.collection('user_info').where({_openid: that.data.openid}).update({
                 data: {
                   taskid: new_col
@@ -88,20 +95,13 @@ Page({
               })
             }
           )
+          ele = ele.slice(1)
+          display_col = display_col.slice(1)
         }
-        console.log(display_col)
-        console.log(ele)
-        var col_data = []
-        Promise.all(display_col).then((values) => {
-          // console.log(values)
-          for (let i = 0; i < display_col.length; i++){
-            col_data.push(values[i].data)
-          }
-          this.setData({
-            allCollections: col_data
-          })
-        }).catch (res => console.log(res))
-      
+        console.log(resolved_list)
+        this.setData({
+          allCollections: resolved_list
+        })
       },
       fail: res => {
         console.log(res)
