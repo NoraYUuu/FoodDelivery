@@ -23,10 +23,10 @@
 }
 .nav_underline{
   background:var(--themeColor);
-  width:120rpx;
+  width:110rpx;
   height:5rpx;
   margin-top:-10rpx;
-  margin-left:70rpx;
+  margin-left:40rpx;
   border-radius:10rpx;
 }
 .tab_view{

@@ -18,7 +18,11 @@
       data-deadline="{{item.deadline}}" data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "childDetail" data-img="{{item.image}}"></card>
   </view>
 
-  <view wx:if="{{show && selected == 1}}" class='a' wx:for="{{allCollections}}">
+  <view wx:if="{{show && selected == 1}}" class='a' wx:for="{{alljoined}}">
+    <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
+    data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "childDetail" data-img="{{item.image}}"></card>
+  </view>
+  <view wx:if="{{show && selected == 2}}" class='a' wx:for="{{allCollections}}">
     <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
     data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" bindtap = "showDetail" data-img="{{item.image}}"></card>
   </view>

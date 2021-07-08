@@ -12,11 +12,12 @@ Page({
    */
   data: {
     allCollections: [],
+    alljoined:[],
     myPublish:[],
     starred: true,
     show: true,
     selected: 0,
-    list: ['我发布的', '我的收藏', '推荐拼团'],
+    list: ['我发布的','我加入的','我的收藏', '推荐拼团'],
     openid:'',
     len:0
   },
@@ -35,6 +36,8 @@ Page({
     // })
     this.getOpenid()
     let that = this;
+  
+
     db.collection('user_info').where({_openid: this.data.openid}).get({
       success: async res=>{
         const userdata = res.data.pop()
@@ -115,6 +118,7 @@ Page({
         console.log(res)
       }
     })
+    
 
 
     db.collection('tasks').where({
@@ -128,7 +132,89 @@ Page({
         })     
       }
     })
-    
+
+    db.collection('user_info').where({_openid: this.data.openid}).get({
+      success: async res=>{
+        const userdata = res.data.pop()
+        let collections = userdata.groupid //我加入的
+        console.log(collections)
+        let copy = userdata.groupid.slice()
+        console.log(copy)
+        let display_col = []
+        let ele = []
+        let skip = false
+        let new_col = []
+        // var loop = 0
+        while(collections.length > 0){
+          // console.log('element is ' + collections[i])
+          const element = collections.pop()
+          console.log(collections)
+          // console.log(copy)
+          const p = new Promise((resolve, reject) => {
+            db.collection('tasks').doc(element).get({
+              success: res => {
+                // console.log(res.data)
+                resolve(res)
+              },
+              fail(res) { 
+                reject(res)
+              }
+            })
+          })
+          console.log('processing')
+          display_col.push(p)
+          ele.push(element)
+        }
+        // await display_col[display_col.length-1]
+        console.log("received")
+        console.log(display_col)
+        // display_col = display_col.slice(1)
+        // console.log(display_col)
+        let resolved_list = []
+        while(display_col.length > 0) {
+          await display_col[0].then(
+            value => {
+              console.log('added')
+              // console.log(value.data)
+              resolved_list.push(value.data)
+              console.log(resolved_list)
+            },
+            reason=>{
+              console.log('deleted')
+              copy = copy.filter(item => item!= ele[0])
+              console.log(copy)
+              
+            }
+          )
+          
+          ele = ele.slice(1)
+          display_col = display_col.slice(1)
+          if (display_col.length == 0) {
+                
+            db.collection('user_info').where({_openid: that.data.openid}).update({
+              data: {
+                groupid: copy
+              },
+              success(res) {
+                console.log(res)
+              },
+              fail(res) {
+                console.log(res)
+              }
+            })
+          }
+        }
+        console.log(resolved_list)
+        // resolved_list = resolved_list.filter(item => this.data.myPublish.includes(item) == false)
+        this.setData({
+          alljoined: resolved_list
+        })
+
+      },
+      fail: res => {
+        console.log(res)
+      }
+    })
   },
 
   showDetail(e){
@@ -318,9 +404,15 @@ Page({
           selected: 1
         })
       } else {
-        that.setData({
-          selected: 2
-        })
+        if (index == 2) {
+          that.setData({
+            selected: 2
+          })
+        } else {
+          that.setData({
+            selected: 3
+          })
+        }
       }
     }
   },
@@ -343,6 +435,7 @@ Page({
           const mine = task._openid == openID;
           const onlyMe = mine && (task.joined.length == 1);
           const included = task.joined.includes(openID);
+          console.log(included)
           wx.setStorageSync('current_joined', task.joined);
           // res.data 包含该记录的数据
            const check = (task.joined.length > 1) || (!mine);
