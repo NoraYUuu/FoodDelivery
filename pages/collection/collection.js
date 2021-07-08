@@ -19,7 +19,8 @@ Page({
     selected: 0,
     list: ['我发布的','我加入的','我的收藏', '推荐拼团'],
     openid:'',
-    len:0
+    len:0,
+    totalPublish:0
   },
 
   getCollections() {
@@ -36,7 +37,6 @@ Page({
     // })
     this.getOpenid()
     let that = this;
-  
 
     db.collection('user_info').where({_openid: this.data.openid}).get({
       success: async res=>{
@@ -70,8 +70,6 @@ Page({
           ele.push(element)
         }
         // await display_col[display_col.length-1]
-        console.log("received")
-        console.log(display_col)
         // display_col = display_col.slice(1)
         // console.log(display_col)
         let resolved_list = []
@@ -108,7 +106,7 @@ Page({
             })
           }
         }
-        console.log(resolved_list)
+        // console.log(resolved_list)
         this.setData({
           allCollections: resolved_list
         })
@@ -118,19 +116,16 @@ Page({
         console.log(res)
       }
     })
-    
+    // set mypublish
+let published = [];
+    Promise.all(this.getList()).then(value => {
+      for (let i = 9; i >=0; i-=1) {
+      published = published.concat(value[i].reverse())
+    }
+    that.setData({
+      myPublish: published
+    })
 
-
-    db.collection('tasks').where({
-      _openid: this.data.openid
-    }).get({
-      //如果查询成功的话    
-      success: res => {
-        //这一步很重要，给ne赋值，没有这一步的话，前台就不会显示值
-        this.setData({
-          myPublish: res.data
-        })     
-      }
     })
 
     db.collection('user_info').where({_openid: this.data.openid}).get({
@@ -464,36 +459,22 @@ Page({
        })
     },
     updateReload(){
+      const that = this;
+      let published = [];
+    Promise.all(this.getList()).then(value => {
+      for (let i = 9; i >=0; i-=1) {
+      published = published.concat(value[i].reverse())
+    }
+    that.setData({
+      myPublish: published,
+      show: false
+    })
+    that.selectComponent('.popWindow').setData({
+      show: false
+    })
+    that.onLoad()
+    that.setShow() 
 
-      db.collection('tasks').where({
-        _openid: this.data.openid
-      }).get({
-      }).then(res => {
-  
-      (async () => {
-        let p = await new Promise((resolve) => {
-          this.setData({
-            myPublish: res.data,
-            show: false
-          })
-          resolve(this.setData({
-            myPublish: res.data,
-            show: false
-          }))
-        });
-        this.selectComponent('.popWindow').setData({
-          show: false
-        })
-        this.onLoad()
-        this.setShow() 
-    })();
-    //   p.then(res => {
-    //     this.selectComponent('.popWindow').setData({
-    //       show: false
-    //     })
-    //     this.onLoad()
-    //     this.setShow() 
-    //   })
     })
 
     },
@@ -501,5 +482,26 @@ Page({
       this.selectComponent(".newCollection").setData({
         show: true
       })
+    },
+    getList() {
+      let totalP = [];
+      for (let i = 0; i < 10; i+=1){
+        const p = new Promise((resolve, reject) => {
+        db.collection('tasks').where({
+          _openid: this.data.openid
+        }).skip(i * 20).get({
+        }).then(res => {
+          console.log(res)
+          resolve(res.data)
+          // this.setData({
+          //   totalPublish: res.total
+          // })
+        }).catch(e => {
+          resolve([])
+        })
+      })
+      totalP.push(p)
     }
+    return totalP;
+    },
 })
