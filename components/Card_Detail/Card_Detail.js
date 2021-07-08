@@ -320,11 +320,11 @@ Component({
         const join = wx.getStorageSync('current_joined');
         join.splice(join.indexOf(wx.getStorageSync('info').openid), 1);
 
-        if (that.data.mine) {
+        if (that.data.mine) { //我是房主，退出
           db.collection('tasks').doc(this.data.publishId).update({
             data: {
               joined: join,
-              _openid: join[0]
+              _openid: join[0] //交给剩下的人房主权
             },
             success: function (res) {
               resolve(res);
@@ -358,6 +358,15 @@ Component({
                 included: false
               })
               resolve(res)
+              const _ = db.command;
+              const openid = wx.getStorageSync('info').openid
+              db.collection('user_info').where({ _openid: openid }).update({
+                data: {
+                  'groupid': _.pull(that.data.publishId)
+                },
+                success: res => { console.log(res) },
+                fail: err => { console.log(err) }
+              })
             },
             fail(res) {
               console.log(res)

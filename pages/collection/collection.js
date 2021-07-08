@@ -117,9 +117,9 @@ Page({
       }
     })
     // set mypublish
-let published = [];
+    let published = []
     Promise.all(this.getList()).then(value => {
-      for (let i = 9; i >=0; i-=1) {
+      for (let i =  9; i >=0; i-=1) {
       published = published.concat(value[i].reverse())
     }
     that.setData({
@@ -199,8 +199,11 @@ let published = [];
             })
           }
         }
-        console.log(resolved_list)
-        // resolved_list = resolved_list.filter(item => this.data.myPublish.includes(item) == false)
+        // console.log(resolved_list[0])
+        let myPublish_id = this.data.myPublish.slice().map(item => item._id)
+        // console.log(myPublish_id)
+        resolved_list = resolved_list.filter(item => myPublish_id.includes(item._id) == false)
+        // console.log(resolved_list)
         this.setData({
           alljoined: resolved_list
         })
