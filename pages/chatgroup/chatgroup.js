@@ -45,6 +45,7 @@ Page({
     user_value: '',
     info_list: [],
     groupId: '',
+    groupInfo: {},
     emoji_list: [{
       name: '[微笑]',
       imgSrc: '../../images/emoji/1.png'
@@ -129,11 +130,19 @@ Page({
     var _this = this;
     //var info = wx.getStorageSync('userinfo');
     var _info = wx.getStorageSync('info'); //store openId
+    let _groupInfo = options.groupInfo && JSON.parse(options.groupInfo) || {};
+    wx.setNavigationBarTitle({
+      title: _groupInfo.restaurant
+    })
+    console.log(_groupInfo)
     //console.log(_info);
     _this.setData({
       info: _info,
-      groupId: options.groupId
+      groupInfo: _groupInfo,
+      groupId: _groupInfo.groupId
+      //groupId: options.groupId
     })
+
     //console.log(this.data.groupId);
     const query = wx.createSelectorQuery()
     query.select('.page2').boundingClientRect()

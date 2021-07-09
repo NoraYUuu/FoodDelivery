@@ -14,18 +14,61 @@ Page({
 		//unReadTotalNotNum: 0,
 		groupId: [],
 		show_clear: false,
-		groupName: {}
+		groups: [] //store groupId, groupname, groupphoto
 	},
 
 	onShow() {
 		let self = this;
 		let userInfo = wx.getStorageSync('userinfo');
 		let openid = wx.getStorageSync('info').openid;
-		db.collection("user_info").where({ _openid: openid }).get().then(res => {
-			this.setData({
-				groupId: res.data[0].groupid
-			})
-		}).catch(err => { console.log(err) })
+		db.collection("user_info").where({ _openid: openid }).get({
+			success: async res => {
+				let groupid = res.data[0].groupid;
+				this.setData({
+					groupId: groupid
+				})
+				var group = [];
+				for (var i = 0, len = groupid.length; i < len; i++) {
+					const p = await new Promise((resolve, reject) => {
+						db.collection("tasks").doc(groupid[i]).get({
+							success: res => {
+								console.log(res);
+								/* let info = res.data;
+								group.push({
+									groupId: info._id,
+									restaurant: info.restaurant,
+									photo: info.image
+								}) */
+								resolve(res)
+							},
+							fail(res) {
+								reject(res)
+							}
+						})
+					},
+					)
+					//console.log(p)
+					let info = p.data;
+					group.push({
+						groupId: info._id,
+						restaurant: info.restaurant,
+						photo: info.image
+					})
+					//console.log(group)
+					//console.log(self.data.groups)
+				}
+
+				self.setData({
+					groups: group
+				})
+				console.log(self.data.groups)
+			},
+			fail: res => {
+				console.log(res)
+			}
+
+		})
+
 		//let groupid = wx.getStorageSync('userDetails').groupid;
 		//console.log(groupid);
 		if (!userInfo) {
@@ -40,6 +83,7 @@ Page({
 			})
 		}
 	},
+
 
 	openSearch: function () {
 		this.setData({
@@ -120,10 +164,10 @@ Page({
 	//跳转到聊天室
 	toChat: function (event) {
 
-		let detail = event.currentTarget.dataset.item;
-		console.log(event.currentTarget.dataset.item);
+		let detail = event.currentTarget.dataset.item;//.groupId;
+		console.log(event.currentTarget.dataset.item.groupId);
 		wx.navigateTo({
-			url: '../chatgroup/chatgroup?groupId=' + detail, //need to stringify or not?
+			url: '../chatgroup/chatgroup?groupInfo=' + JSON.stringify(detail), //need to stringify or not?
 		})
 	}
 })

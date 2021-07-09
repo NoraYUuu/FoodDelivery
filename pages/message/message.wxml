@@ -14,15 +14,15 @@
         </view>
         <text bindtap="cancel">取消</text>
     </view>
-    <view wx:for="{{groupId}}" wx:key="index" class="chat_list" data-item="{{item}}">
+    <view wx:for="{{groups}}" wx:key="index" class="chat_list" data-item="{{item}}">
         <!-- catchtap="del-chat" -->
         <!-- 这个view标签使用wx:for循环列表 -->
         <swipe-delete>
             <view class="tabs" catchtap="toChat" data-item="{{item}}">
-                <image class="img" src="../../icons/xiaoxi.png"></image>
+                <image class="img" src="{{item.photo}}"></image>
                 <view class="tab_l">
                     <view class="tabs_12">
-                        <view class="user_f">聊天室</view>
+                        <view class="user_f">{{item.restaurant}}</view>
                         <view class="user_msg">[动画表情]</view>
                     </view>
                     <view class="tab_r">20:47</view>
@@ -35,7 +35,7 @@
     <!-- <view wx:if="{{arr.length == 0}}" class="chat_noChat">
 	当前没有历史聊天，添加一个好友开始聊天吧
     </view> -->
-    <view wx:if="{{groupId.length == 0}}" class="chat_noChat">当前没有历史聊天，添加一个好友开始聊天吧~</view>
+    <view wx:if="{{groups.length == 0}}" class="chat_noChat">当前没有历史聊天，添加一个好友开始聊天吧~</view>
 </scroll-view>
 <!-- upload button, can be used to upload screenshot -->
 <!-- <button bindtap="chooseExcel">upload</button> -->
