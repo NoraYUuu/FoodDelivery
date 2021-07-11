@@ -41,8 +41,12 @@
             <image class="emoji" data-src="{{item.imgSrc}}" src="{{item.imgSrc}}" bindtap="sendEmoji"></image>
         </block>
         <block wx:if="{{isTabs == 'features'}}">
+            <view class="feat1" bindtap="sendPic">
+                <image class="featImg" src="../../images/features/photo.png"></image>
+                <view class="featTitle">发送图片</view>
+            </view>
             <view class="feat1" bindtap="toAddUser">
-                <image class="featImg" src="../../images/features/adduser.png"></image>
+                <image class="featImg" src="../../images/features/users.png"></image>
                 <view class="featTitle">查看成员</view>
             </view>
         </block>

@@ -111,7 +111,9 @@ Page({
         avatarUrl: userInfo.avatarUrl, //头像
         nickName: userInfo.nickName, //昵称
         value: _this.data.user_value, //消息内容
-        groupid: _this.data.groupId
+        groupid: _this.data.groupId,
+        time: app.formatDate(new Date()),
+        type: "text"
       },
       success(res) {
         console.log(res)
@@ -191,6 +193,53 @@ Page({
     })
   },
 
+  //发送图片
+  sendPic(e) {
+    console.log(e);
+    let that = this;
+    let userInfo = wx.getStorageSync('userinfo');
+    wx.chooseImage({
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success: chooseResult => {
+        //console.log(chooseResult)
+        //将图片上传至云存储空间
+        const filePath = chooseResult.tempFilePaths[0];
+        console.log(chooseResult.tempFilePaths[0]);
+        //const name = Math.random() * 1000000;
+        const cloudPath = new Date().getTime() + Math.floor(Math.random() * 1000) + ".png"; //+ filePath.match(/\.[^.]+?$/)[0];
+        wx.cloud.uploadFile({
+          //url: '636c-cloud1-1gcwirla84b05897-1305858015',
+          //指定上传到的云路径
+          couldPath: cloudPath,
+          //指定要上传的文件的小程序临时文件路径
+          filePath: filePath,
+
+          //成功
+          success: (res) => {
+            console.log('上传成功', res)
+            //let imgUrl = res.fileID
+            /* DB.add({
+              data: {
+                avatarUrl: userInfo.avatarUrl,
+                nickName: userInfo.nickName,
+                image: imgUrl,
+                groupid: that.data.groupId,
+                time: app.formatDate(new Date()),
+                type: "image"
+              },
+              success(res) {
+                console.log('图片发送成功', res)
+              },
+              fail(res) {
+                console.log('图片发送失败，返回失败', res)
+              }
+            }) */
+          }
+        })
+      }
+    })
+  },
 
   // 发送表情包
   sendEmoji(e) {
@@ -204,7 +253,9 @@ Page({
         avatarUrl: userInfo.avatarUrl, //头像
         nickName: userInfo.nickName, //昵称
         emoji: src, //消息内容
-        groupid: _this.data.groupId
+        groupid: _this.data.groupId,
+        time: app.formatDate(new Date()),
+        type: "emoji"
       },
       success(res) {
 

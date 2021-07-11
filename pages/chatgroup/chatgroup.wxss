@@ -138,8 +138,10 @@ page {
 
 .featImg {
 	width: 100rpx;
-	height: 100rpx;
+	height: 80rpx
+	
 }
+
 
 .featTitle {
 	font-size: 25rpx;
@@ -147,11 +149,14 @@ page {
 }
 
 .feat1 {
-	width: 100rpx;
+	width: 120rpx;
 	height: 120rpx;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin-left: 20rpx;
+	margin: 5rpx 25rpx;
+	background-color: white;
+	border-radius: 5px;
+	
 }
