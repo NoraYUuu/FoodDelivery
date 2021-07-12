@@ -25,18 +25,6 @@
           "scene": null
         },
         {
-          "name": "聊天室",
-          "pathName": "pages/chatroom/chatroom",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "消息列表",
-          "pathName": "pages/message/message",
-          "query": "",
-          "scene": null
-        },
-        {
           "name": "chatgroup",
           "pathName": "pages/chatgroup/chatgroup",
           "query": "",
@@ -45,6 +33,18 @@
         {
           "name": "收藏",
           "pathName": "pages/collection/collection",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "上传照片",
+          "pathName": "pages/upload-photo/upload-photo",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "消息列表",
+          "pathName": "pages/message/message",
           "query": "",
           "scene": null
         }

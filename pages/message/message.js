@@ -53,7 +53,8 @@ Page({
 						group.push({
 							groupId: info._id,
 							restaurant: info.restaurant,
-							photo: info.image
+							photo: info.image,
+							managerId: info._openid
 						})
 						//console.log(group)
 						//console.log(self.data.groups)

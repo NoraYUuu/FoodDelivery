@@ -10,6 +10,9 @@
                 <block wx:if="{{item.value}}">
                     <view>{{item.value}}</view>
                 </block>
+                <block wx:if="{{item.image}}">
+                    <image class="pic-sent" src="{{item.image}}"></image>
+                </block>
             </view>
         </view>
         <!-- 收到的 info -->
@@ -21,8 +24,8 @@
             <block wx:if="{{item.emoji}}">
                 <image class="emoji" src="{{item.emoji}}"></image>
             </block>
-            <block wx:if="{{item.value}}">
-                <view>{{item.value}}</view>
+            <block wx:if="{{items.image}}">
+                <image class="pic-sent" src="{{item.image}}"></image>
             </block>
         </view>
     </block>

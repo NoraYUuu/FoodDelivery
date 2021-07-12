@@ -186,6 +186,7 @@ Page({
           info_list: list,
           //into: res.docs[res.docs.length - 1]._id
         })
+        console.log(_this.data.info_list)
       },
       onError(err) {
         console.log("失败")
@@ -199,27 +200,25 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userinfo');
     wx.chooseImage({
+      count: 1,
       sizeType: ['original', 'compressed'],
       sourceType: ['album', 'camera'],
-      success: chooseResult => {
+      success: function (chooseResult) {
         //console.log(chooseResult)
         //将图片上传至云存储空间
-        const filePath = chooseResult.tempFilePaths[0];
-        console.log(chooseResult.tempFilePaths[0]);
-        //const name = Math.random() * 1000000;
-        const cloudPath = new Date().getTime() + Math.floor(Math.random() * 1000) + ".png"; //+ filePath.match(/\.[^.]+?$/)[0];
         wx.cloud.uploadFile({
           //url: '636c-cloud1-1gcwirla84b05897-1305858015',
           //指定上传到的云路径
-          couldPath: cloudPath,
+          cloudPath: 'img/' + new Date().getTime() + "-" + Math.floor(Math.random() * 1000),
           //指定要上传的文件的小程序临时文件路径
-          filePath: filePath,
+
+          filePath: chooseResult.tempFilePaths[0],
 
           //成功
           success: (res) => {
             console.log('上传成功', res)
-            //let imgUrl = res.fileID
-            /* DB.add({
+            let imgUrl = res.fileID
+            DB.add({
               data: {
                 avatarUrl: userInfo.avatarUrl,
                 nickName: userInfo.nickName,
@@ -234,9 +233,15 @@ Page({
               fail(res) {
                 console.log('图片发送失败，返回失败', res)
               }
-            }) */
+            })
+          },
+          fail: (err) => {
+            console.log("上传失败", err)
           }
         })
+      },
+      fail: (err) => {
+        console.log("选择失败", err)
       }
     })
   },
@@ -331,9 +336,19 @@ Page({
 
   // 查看用户
   toAddUser() {
-    wx.navigateTo({
-      url: '../userList/index',
-    })
+    let manager = this.data.groupInfo.managerId;
+    //console.log(this.data.info)
+    let self = this.data.info.openid;
+    if (self == manager) {
+      wx.navigateTo({
+        url: '../manage-group/manage-group'
+      })
+    }
+    if (self != manager) {
+      wx.navigateTo({
+        url: '../upload-photo/upload-photo'
+      })
+    }
   }
 
 })
