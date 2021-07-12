@@ -450,7 +450,7 @@ Page({
           const mine = task._openid == openID;
           const onlyMe = mine && (task.joined.length == 1);
           const included = task.joined.includes(openID);
-          console.log(included)
+          //console.log(included)
           wx.setStorageSync('current_joined', task.joined);
           // res.data 包含该记录的数据
            const check = (task.joined.length > 1) || (!mine);
@@ -511,7 +511,7 @@ Page({
           _openid: this.data.openid
         }).skip(i * 20).get({
         }).then(res => {
-          console.log(res)
+          //console.log(res)
           resolve(res.data)
           // this.setData({
           //   totalPublish: res.total
