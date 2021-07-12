@@ -7,7 +7,9 @@
     "pages/login/login",
     "pages/search/index",
     "pages/message/message",
-    "pages/chatgroup/chatgroup"
+    "pages/chatgroup/chatgroup",
+    "pages/upload-photo/upload-photo",
+    "pages/manage-group/manage-group"
   ],
   "window": {
     "backgroundTextStyle": "dark",

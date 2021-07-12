@@ -1,0 +1,25 @@
+<view class="upload-wrap">
+    <view class="upload" bindtap="uploadPic">
+        <image class="chooseImg" src="../../images/features/upload.png"></image>
+    </view>
+    <view class="row-align">
+        <view class="left">
+            <view class="uploaded">已上传的图片:</view>
+        </view>
+        <view class="right">
+            <block wx:for="{{uploaded}}" wx:key="index" bindtap="deletePic">
+                <!-- 已上传的图片 -->
+                <image class="in" src="{{item}}"></image>
+            </block>
+        </view>
+    </view>
+</view>
+<view class="info-wrap">
+    <view class="column-align">
+        <view class="advice">*团员请保存如下二维码进行付款、保存截图并上传作为凭证。</view>
+        <view class="advice">*团长请上传下单截图作为凭证。</view>
+    </view>
+    <view class="QRcode">
+        <image class="code" src="../../images/QRcode/payment.png"></image>
+    </view>
+</view>
