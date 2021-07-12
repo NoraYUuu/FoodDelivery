@@ -132,9 +132,9 @@ Page({
       success: async res=>{
         const userdata = res.data.pop()
         let collections = userdata.groupid //我加入的
-        console.log(collections)
+        //console.log(collections)
         let copy = userdata.groupid.slice()
-        console.log(copy)
+        //console.log(copy)
         let display_col = []
         let ele = []
         let skip = false
@@ -143,7 +143,7 @@ Page({
         while(collections.length > 0){
           // console.log('element is ' + collections[i])
           const element = collections.pop()
-          console.log(collections)
+          //console.log(collections)
           // console.log(copy)
           const p = new Promise((resolve, reject) => {
             db.collection('tasks').doc(element).get({
@@ -156,29 +156,38 @@ Page({
               }
             })
           })
-          console.log('processing')
+         // console.log('processing')
           display_col.push(p)
           ele.push(element)
         }
         // await display_col[display_col.length-1]
-        console.log("received")
-        console.log(display_col)
+        //console.log("received")
+        //console.log(display_col)
         // display_col = display_col.slice(1)
         // console.log(display_col)
         let resolved_list = []
         while(display_col.length > 0) {
           await display_col[0].then(
             value => {
-              console.log('added')
+              // console.log('added')
               // console.log(value.data)
-              resolved_list.push(value.data)
-              console.log(resolved_list)
+
+              if ((value.data.joined.length == parseInt(value.data.numberOfPeople)) || (
+                value.data.joined.length>1 && value.data.numberOfPeople == "All"
+              )) {
+                resolved_list.reverse();
+                resolved_list.push(value.data);
+                resolved_list.reverse();
+    
+              } else {
+                resolved_list.push(value.data);
+              }
+              //console.log(resolved_list)
             },
             reason=>{
-              console.log('deleted')
+              //console.log('deleted')
               copy = copy.filter(item => item!= ele[0])
-              console.log(copy)
-              
+              //console.log(copy)
             }
           )
           
@@ -202,7 +211,15 @@ Page({
         // console.log(resolved_list[0])
         let myPublish_id = this.data.myPublish.slice().map(item => item._id)
         // console.log(myPublish_id)
-        resolved_list = resolved_list.filter(item => myPublish_id.includes(item._id) == false)
+
+        resolved_list = resolved_list.filter(item => {
+          const thisTask = this.data.myPublish[myPublish_id.indexOf(item._id)];
+          var full;
+          if (thisTask!=undefined){
+           full = (thisTask.joined.length == parseInt(thisTask.numberOfPeople)) || (thisTask.numberOfPeople == "All" && thisTask.joined.length>1);
+          }
+          return (myPublish_id.includes(item._id) == false) || full;
+      })
         // console.log(resolved_list)
         this.setData({
           alljoined: resolved_list

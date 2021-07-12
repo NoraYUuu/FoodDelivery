@@ -34,3 +34,7 @@
   /* overflow-y: auto; */
 }
 
+.started{
+  background: rgb(106, 180, 137);
+}
+
