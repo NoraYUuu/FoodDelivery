@@ -478,6 +478,7 @@ Page({
         }
        })
     },
+    
     updateReload(){
       const that = this;
       let published = [];

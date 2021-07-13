@@ -12,6 +12,10 @@ Component({
     pos: {
       type: String,
       value: 'index'
+    },
+    tab_pos: {
+      type: Number,
+      value: 0
     }
   },
 

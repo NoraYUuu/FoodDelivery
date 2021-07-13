@@ -47,8 +47,8 @@
       </view>
     </view>
   </view>
-    <text wx:if="{{!collected && !mine}}" bindtap="star" class="star">收藏</text>
-    <text wx:if="{{collected && !mine}}" bindtap="unstar" class="star">取消收藏</text>
+    <text wx:if="{{(!collected && !mine && !included) || (tab_pos == 2 && !collected)}}" bindtap="star" class="star">收藏</text>
+    <text wx:if="{{(collected && !mine && !included) || (tab_pos == 2 && collected)}}" bindtap="unstar" class="star">取消收藏</text>
     <text wx:if="{{onlyMe && !fromIndex}}" class="ok" bindtap="bindUpdate">更新</text>
     <text wx:if="{{onlyMe && !fromIndex}}" class="ok" bindtap="bindDelete">删除</text>
     <text wx:if="{{!included}}" bindtap="joinGrp" class="ok">加入拼团 </text>

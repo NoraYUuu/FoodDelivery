@@ -24,7 +24,7 @@
   </view>
   <view wx:if="{{show && selected == 2}}" class='a' wx:for="{{allCollections}}">
     <card data-numberOfPeople="{{item.numberOfPeople}}" data-deadline="{{item.deadline}}"
-    data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" data-joined="{{item.joined}}" bindtap = "showDetail" data-img="{{item.image}}"></card>
+    data-restaurant="{{item.restaurant}}" data-myid="{{item._id}}" data-joined="{{item.joined}}" bindtap = "childDetail" data-img="{{item.image}}"></card>
   </view>
 
   <!-- <view wx:if="{{show && selected == 2}}" class='a' wx:for="{{myPublish}}">
@@ -33,6 +33,6 @@
 
 </view>
 
-<popout collected = "{{starred}}" pos = "collection" class="popWindow" bindclose="{{(selected == 1) ? 'handleclose' : ''}}" bindunstar="handleunstar" bindupdate="updateReload" binddelete="updateReload" bindleaveGrp="updateReload"></popout>
+<popout collected = "{{starred}}" pos = "collection" class="popWindow" bindclose="{{(selected == 1) ? 'handleclose' : ''}}" tab_pos="{{selected}}" bindunstar="handleunstar" bindupdate="updateReload" binddelete="updateReload" bindleaveGrp="updateReload"></popout>
 <image class="createNew" src="../../icons/jia.svg" bindtap="createNew"></image>
 <newCollection class="newCollection"></newCollection>
