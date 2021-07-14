@@ -323,12 +323,14 @@ Component({
       const p = new Promise(resolve => {
         const join = wx.getStorageSync('current_joined');
         join.splice(join.indexOf(wx.getStorageSync('info').openid), 1);
+        console.log(that.data.mine);
+        console.log(that.data.onlyMe);
 
         if (that.data.mine) { //我是房主，退出
-          db.collection('tasks').doc(this.data.publishId).update({
+          db.collection('tasks').doc(that.data.publishId).update({
             data: {
               joined: join,
-              _openid: join[0] //交给剩下的人房主权
+              manager: join[0] //交给剩下的人房主权
             },
             success: function (res) {
               resolve(res);
@@ -353,7 +355,7 @@ Component({
             }
           })
         } else {
-          db.collection('tasks').doc(this.data.publishId).update({
+          db.collection('tasks').doc(that.data.publishId).update({
             data: {
               joined: join,
             },

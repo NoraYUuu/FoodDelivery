@@ -156,7 +156,9 @@ showDetail(e){
       
       const openID = wx.getStorageSync('info').openid;
       const task = res.data;
-      const mine = task._openid == openID;
+      const mine = task.manager == openID;
+      console.log("mine")
+      console.log(mine)
       const onlyMe = mine && (task.joined.length == 1);
       const included = task.joined.includes(openID);
       wx.setStorageSync('current_joined', task.joined);

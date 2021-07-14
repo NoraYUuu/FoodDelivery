@@ -447,7 +447,7 @@ Page({
        db.collection('tasks').doc(my_id).get({
          success: function(res) {
           const task = res.data;
-          const mine = task._openid == openID;
+          const mine = task.manager == openID;
           const onlyMe = mine && (task.joined.length == 1);
           const included = task.joined.includes(openID);
           //console.log(included)
@@ -509,7 +509,7 @@ Page({
       for (let i = 0; i < 10; i+=1){
         const p = new Promise((resolve, reject) => {
         db.collection('tasks').where({
-          _openid: this.data.openid
+          manager: this.data.openid
         }).skip(i * 20).get({
         }).then(res => {
           //console.log(res)

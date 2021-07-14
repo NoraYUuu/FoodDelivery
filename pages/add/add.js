@@ -119,7 +119,8 @@ Page({
           //in progress: -1, in progress: 0, complete: 1, not completed but expired: 2;
           state: -1,
           joined: [myOpenId],
-          image: this.data.resImage
+          image: this.data.resImage,
+          manager: myOpenId
         }, success(res) {
           that.setData({
             groupId: res._id
