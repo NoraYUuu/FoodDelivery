@@ -46,6 +46,7 @@ Page({
     info_list: [],
     groupId: '',
     groupInfo: {},
+    paid: [], //store the openid of those who already paid
     emoji_list: [{
       name: '[微笑]',
       imgSrc: '../../images/emoji/1.png'
@@ -184,7 +185,7 @@ Page({
         }
         _this.setData({
           info_list: list,
-          //into: res.docs[res.docs.length - 1]._id
+          into: allMsg[allMsg.length - 1]._id
         })
         console.log(_this.data.info_list)
       },
