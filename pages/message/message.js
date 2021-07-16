@@ -48,13 +48,14 @@ Page({
 							})
 						},
 						)
-						//console.log(p)
+						//console.log(p.data)
 						let info = p.data;
 						group.push({
 							groupId: info._id,
 							restaurant: info.restaurant,
 							photo: info.image,
-							managerId: info._openid
+							managerId: info._openid,
+							joined: info.joined
 						})
 						//console.log(group)
 						//console.log(self.data.groups)
@@ -113,6 +114,19 @@ Page({
 		})
 	},
 
+	onInput: function (e) {
+		let inputValue = e.detail.inputValue
+		if (inputValue) {
+			this.setData({
+				show_clear: true
+			})
+		} else {
+			this.setData({
+				show_clear: false
+			})
+		}
+	},
+
 	close_mask: function () {
 		this.setData({
 			search_btn: true,
@@ -121,6 +135,14 @@ Page({
 		});
 	},
 
+	del_chat: function (event) {
+		let detail = event.currentTarget.dataset.item;
+		console.log(detail)
+		let nameList = { your: detail.info };
+		let me = this;
+	},
+
+	/*
 	chooseExcel() {
 		let that = this
 		wx.chooseMessageFile({
@@ -134,7 +156,7 @@ Page({
 		})
 	},
 
-	/* uploadExcel(path) {
+	 uploadExcel(path) {
 		let that = thiswx.cloudwx.uploadFile({
 			cloudPath: new Date().getTime() + '.xls',
 			filePath: path,
@@ -166,7 +188,7 @@ Page({
 	toChat: function (event) {
 
 		let detail = event.currentTarget.dataset.item;//.groupId;
-		console.log(event.currentTarget.dataset.item.groupId);
+		console.log(event.currentTarget.dataset.item);
 		wx.navigateTo({
 			url: '../chatgroup/chatgroup?groupInfo=' + JSON.stringify(detail), //need to stringify or not?
 		})

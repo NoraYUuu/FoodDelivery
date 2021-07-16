@@ -85,6 +85,13 @@ navigator view.test {
 	bottom: 0;
 } */
 
+.scroll_box{
+	width: 100%;
+	height: 1000rpx;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
 .chat_list_wraper{
 	padding-bottom: 270rpx; 
 	box-sizing: border-box; 
@@ -92,7 +99,7 @@ navigator view.test {
 	position: fixed;
 	top: 128rpx;
 	overflow: hidden;
-	
+	display: inline-block;
 }
 
 .chat_noChat{
