@@ -31,6 +31,7 @@ Page({
 						groupId: groupid
 					})
 					var group = [];
+					var group2 = [];
 					for (var i = 0, len = groupid.length; i < len; i++) {
 						const p = await new Promise((resolve, reject) => {
 							db.collection("tasks").doc(groupid[i]).get({
@@ -59,13 +60,20 @@ Page({
 							managerId: info._openid,
 							joined: info.joined
 						})
+						group2.push({
+							groupId: info._id,
+							restaurant: info.restaurant,
+							photo: info.image,
+							managerId: info._openid,
+							joined: info.joined
+						})
 						//console.log(group)
 						//console.log(self.data.groups)
 					}
 
 					self.setData({
 						groups: group,
-						groups2: group
+						groups2: group2
 					})
 					console.log(self.data.groups)
 				},
@@ -102,9 +110,9 @@ Page({
 		let searchValue = val.detail.value.toLowerCase();
 		const that = this;
 		let arr = [];
-		let groups = that.data.groups;
+		let groups = that.data.groups2;
 		for (var j = 0; j < groups.length; j++) {
-			console.log(groups[j].restaurant)
+			//console.log(groups[j].restaurant)
 			if (groups[j].restaurant.toLowerCase().indexOf(searchValue) != -1) {
 				arr.push(groups[j])
 			}
