@@ -14,7 +14,9 @@ Page({
 		//unReadTotalNotNum: 0,
 		groupId: [],
 		show_clear: false,
-		groups: [] //store groupId, groupname, groupphoto
+		groups: [], //store groupId, groupname, groupphoto
+		search: [],
+		groups2: []
 	},
 
 	onShow() {
@@ -33,7 +35,7 @@ Page({
 						const p = await new Promise((resolve, reject) => {
 							db.collection("tasks").doc(groupid[i]).get({
 								success: res => {
-									console.log(res);
+									//console.log(res);
 									/* let info = res.data;
 									group.push({
 										groupId: info._id,
@@ -62,7 +64,8 @@ Page({
 					}
 
 					self.setData({
-						groups: group
+						groups: group,
+						groups2: group
 					})
 					console.log(self.data.groups)
 				},
@@ -95,12 +98,43 @@ Page({
 		});
 	},
 
+	onSearch: function (val) {
+		let searchValue = val.detail.value.toLowerCase();
+		const that = this;
+		let arr = [];
+		let groups = that.data.groups;
+		for (var j = 0; j < groups.length; j++) {
+			console.log(groups[j].restaurant)
+			if (groups[j].restaurant.toLowerCase().indexOf(searchValue) != -1) {
+				arr.push(groups[j])
+			}
+		}
+		that.setData({
+			groups: arr
+		})
+		//console.log(arr);
+	},
+
+	onInput: function (e) {
+		let inputValue = e.detail.value
+		if (inputValue) {
+			this.setData({
+				show_clear: true
+			})
+		} else {
+			this.setData({
+				show_clear: false
+			})
+		}
+	},
 
 	cancel: function () {
 		/* this.getChatList() */
+		let allChat = this.data.groups2;
 		this.setData({
 			search_btn: true,
 			search_chats: false,
+			groups: allChat,
 			//arr: this.getChatList(),
 			/* unReadSpotNum: getApp().globalData.unReadMessageNum > 99 ? '99+' : getApp().globalData.unReadMessageNum, */
 			gotop: false
@@ -114,18 +148,7 @@ Page({
 		})
 	},
 
-	onInput: function (e) {
-		let inputValue = e.detail.inputValue
-		if (inputValue) {
-			this.setData({
-				show_clear: true
-			})
-		} else {
-			this.setData({
-				show_clear: false
-			})
-		}
-	},
+
 
 	close_mask: function () {
 		this.setData({
@@ -138,8 +161,19 @@ Page({
 	del_chat: function (event) {
 		let detail = event.currentTarget.dataset.item;
 		console.log(detail)
-		let nameList = { your: detail.info };
+		//let nameList = { your: detail.info };
 		let me = this;
+		let toDelete = detail.groupId;
+		let allChat = me.data.groups;
+		for (var i = 0; i < allChat.length; i++) {
+			if (allChat[i].groupId == toDelete) {
+				allChat.splice(i, 1)
+			}
+		}
+		console.log(allChat);
+		me.setData({
+			groups: allChat
+		})
 	},
 
 	/*

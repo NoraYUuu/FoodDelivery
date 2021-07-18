@@ -18,17 +18,19 @@
         <view wx:for="{{groups}}" wx:key="index" class="chat_list" data-item="{{item}}">
             <!-- catchtap="del-chat" -->
             <!-- 这个view标签使用wx:for循环列表 -->
-            <view class="tabs" catchtap="toChat" data-item="{{item}}">
-                <image class="img" src="{{item.photo}}"></image>
-                <view class="tab_l">
-                    <view class="tabs_12">
-                        <view class="user_f">{{item.restaurant}}</view>
-                        <view class="user_msg">[动画表情]</view>
+            <swipe-delete catchtap="del_chat" data-item="{{item}}">
+                <view class="tabs" catchtap="toChat" data-item="{{item}}">
+                    <image class="img" src="{{item.photo}}"></image>
+                    <view class="tab_l">
+                        <view class="tabs_12">
+                            <view class="user_f">{{item.restaurant}}</view>
+                            <view class="user_msg">[动画表情]</view>
+                        </view>
+                        <view class="tab_r">20:47</view>
+                        <!-- 需改为最后一条消息的时间 -->
                     </view>
-                    <view class="tab_r">20:47</view>
-                    <!-- 需改为最后一条消息的时间 -->
                 </view>
-            </view>
+            </swipe-delete>
         </view>
     </scroll-view>
     <!-- 插入遍历消息入口 -->
