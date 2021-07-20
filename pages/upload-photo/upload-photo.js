@@ -9,14 +9,19 @@ Page({
     openId: '',
     isManager: false,
     paid: false,
-    uploaded: ["../../images/features/photo.png", "../../images/features/users.png"]//, "../../images/features/adduser.png"]
+    uploaded: []//"../../images/features/photo.png", "../../images/features/users.png"]//, "../../images/features/adduser.png"]
   },
 
   /**
    * Lifecycle function--Called when page load
    */
   onLoad: function (options) {
-
+    let photos = wx.getStorageSync("uploaded");
+    if (photos) {
+      this.setData({
+        uploaded: photos
+      })
+    }
   },
 
   /**
@@ -89,10 +94,12 @@ Page({
             success: function (uploadres) {
               console.log("上传成功", uploadres)
               var photos = that.data.uploaded;
-              photos.push(uploadres.fieldID);
-              this.setData({
+              photos.push(uploadres.fileID);
+              wx.setStorageSync('uploaded', photos);
+              that.setData({
                 uploaded: photos
               })
+              console.log(that.data.uploaded)
               wx.showLoading({
                 title: "图片上传中",
                 mask: true,
@@ -111,7 +118,26 @@ Page({
         }
       })
     }
+  },
 
 
+  //need to change it to confirm before delete
+  deletePic(e) {
+    let file = e.currentTarget.dataset.item; //fileID of the photo
+    let photos = this.data.uploaded;
+    console.log(photos);
+    for (var i = 0; i < photos.length; i++) {
+      if (photos[i] == file) {
+        photos.splice(i, 1)
+        console.log(photos)
+        break
+      }
+    }
+    this.setData({
+      uploaded: photos
+    })
+    wx.setStorageSync('uploaded', photos)
+    //console.log(e.currentTarget.dataset.item)
   }
+
 })

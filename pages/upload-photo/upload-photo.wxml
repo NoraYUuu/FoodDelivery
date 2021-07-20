@@ -7,9 +7,11 @@
             <view class="uploaded">已上传的图片:</view>
         </view>
         <view class="right">
-            <block wx:for="{{uploaded}}" wx:key="index" bindtap="deletePic">
+            <block wx:for="{{uploaded}}" wx:key="index">
                 <!-- 已上传的图片 -->
-                <image class="in" src="{{item}}"></image>
+                <view class="photo-wrap" bindtap="deletePic" data-item="{{item}}">
+                    <image class="in" src="{{item}}"></image>
+                </view>
             </block>
         </view>
     </view>
