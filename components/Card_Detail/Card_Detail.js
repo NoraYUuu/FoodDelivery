@@ -222,7 +222,7 @@ Component({
           db.collection('tasks').doc(this.data.publishId).update({
             data: {
               numberOfPeople: this.data.totalNeeded,
-              deadline: this.data.deadline,
+              deadline: parseInt(this.data.deadline.split(':')[0])*60 + parseInt(this.data.deadline.split(':')[1]),
               location: this.data.location,
               dLocation: this.data.dLocation
             },
@@ -238,7 +238,7 @@ Component({
         const p = new Promise(resolve => {
           db.collection('tasks').doc(this.data.publishId).update({
             data: {
-              deadline: this.data.deadline,
+              deadline: parseInt(this.data.deadline.split(':')[0])*60 + parseInt(this.data.deadline.split(':')[1]),
               location: this.data.location,
               dLocation: this.data.dLocation
             },

@@ -12,8 +12,8 @@ Component({
    * Component initial data
    */
   data: {
-    time: '12:01',
-    time2: '12:01',
+    time: '00:00',
+    time2: '00:00',
     inputValue: '',
     // 是否隐藏模糊查询的面板
     hideScroll: false,
@@ -169,8 +169,8 @@ Component({
     clear() {
       this.setData({
         inputValue: '',
-        time:'12:01',
-        time2:'12:01',
+        time:'00:00',
+        time2:'00:00',
         index: 0,
         earlier: false,
         show: false,

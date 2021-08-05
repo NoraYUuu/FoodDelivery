@@ -14,6 +14,7 @@ Page({
     allCollections: [],
     alljoined:[],
     myPublish:[],
+    allRecomm: [],
     starred: true,
     show: true,
     selected: 0,
@@ -265,7 +266,7 @@ Page({
           show: true,
           location: task.location,
           dLocation: task.dLocation,
-          deadline: task.deadline,
+          deadline: ('0' + (task.deadline/60).toFixed(0)).slice(-2) + ':' + ('0' + (task.deadline%60).toFixed(0)).slice(-2),
           numOfPpl: task.joined.length + '/' + task.numberOfPeople,
           price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
           restaurant: task.restaurant
@@ -318,6 +319,23 @@ Page({
     // console.log("now set")
     // console.log(this.data.myPublish)
   },
+
+  getRecomm(){
+    let stime = parseInt(this.selectComponent(".newCollection").data.time.split(':')[0])*60 + parseInt(this.selectComponent(".newCollection").data.time.split(':')[1])
+    let etime = parseInt(this.selectComponent(".newCollection").data.time2.split(':')[0])*60 + parseInt(this.selectComponent(".newCollection").data.time2.split(':')[1])
+    console.log(stime)
+    const _ = db.command
+    // db.collection('tasks').where({deadline: this.data.openid}).get({
+    //   success: async res=>{
+    //     // const userdata = res.data.pop()
+    //     // let collections = userdata.taskid
+    //     // let copy = userdata.taskid.slice()
+    //   },
+    //   fail: res => {
+    //     console.log(res)
+    //   }
+    // })
+  },
   /**
    * Lifecycle function--Called when page load
    */
@@ -328,6 +346,7 @@ Page({
       show: true
     })
     var that = this;
+    this.getRecomm()
     /** 
      * 获取系统信息,系统宽高
      */
@@ -339,6 +358,7 @@ Page({
         });
       }
     });
+  
   },
 
   /**
@@ -356,7 +376,8 @@ Page({
    */
   onShow: function () {
     // console.log("shown")
-    this.getCollections();
+    this.getCollections()
+    this.getRecomm()
     // this.setData({
     //   show: true
     // })
@@ -465,7 +486,7 @@ Page({
             disabled: check,
             location: task.location,
             dLocation: task.dLocation,
-            deadline: task.deadline,
+            deadline: ('0' + (task.deadline/60).toFixed(0)).slice(-2) + ':' + ('0' + (task.deadline%60).toFixed(0)).slice(-2),
             numOfPpl: task.joined.length + '/' + task.numberOfPeople,
             num: task.numberOfPeople,
             price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),

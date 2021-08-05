@@ -173,7 +173,7 @@ showDetail(e){
         onlyMe: onlyMe,
         location: task.location,
         dLocation: task.dLocation,
-        deadline: task.deadline,
+        deadline: ('0' + (task.deadline/60).toFixed(0)).slice(-2) + ':' + ('0' + (task.deadline%60).toFixed(0)).slice(-2),
         numOfPpl: task.joined.length + '/' + task.numberOfPeople,
         price: ((task.price[0] + task.price[1] * 0.1 + task.price[2]*0.01)/task.numberOfPeople).toFixed(2),
         restaurant: task.restaurant,

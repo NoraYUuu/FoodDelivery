@@ -115,7 +115,7 @@ Page({
           contact: this.data.contact,
           numberOfPeople: this.data.selectedArr[0],
           location: this.data.selectedArr[1],
-          deadline: this.data.selectedArr[2],
+          deadline: parseInt(this.data.selectedArr[2].split(':')[0])*60 + parseInt(this.data.selectedArr[2].split(':')[1]),
           //in progress: -1, in progress: 0, complete: 1, not completed but expired: 2;
           state: -1,
           joined: [myOpenId],

@@ -15,7 +15,7 @@ Component({
     //console.log(this.dataset)
     this.setData({
       resName:r,
-      deadline:d,
+      deadline:('0' + (d/60).toFixed(0)).slice(-2) + ':' + ('0' + (d%60).toFixed(0)).slice(-2),//TBC
       numOfPpl: j.length + "/" + n,
       id: id,
       cardImg:img,
