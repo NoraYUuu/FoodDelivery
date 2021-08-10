@@ -67,6 +67,7 @@ page {
 
 }
 
+
 .gr {
 	background-color: #96EB6A;
 }
@@ -80,6 +81,11 @@ page {
 	padding: 0 30rpx;
 	box-sizing: border-box;
 	margin-bottom: 15rpx;
+
+}
+
+.time_box {
+	text-align: center;
 
 }
 

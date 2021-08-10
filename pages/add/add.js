@@ -3,6 +3,7 @@
 const dollars = []
 const cents = []
 const milicents = []
+const app = getApp()
 
 for (let i = 0; i <= 50; i++) {
   dollars.push(i)
@@ -115,7 +116,7 @@ Page({
           contact: this.data.contact,
           numberOfPeople: this.data.selectedArr[0],
           location: this.data.selectedArr[1],
-          deadline: parseInt(this.data.selectedArr[2].split(':')[0])*60 + parseInt(this.data.selectedArr[2].split(':')[1]),
+          deadline: parseInt(this.data.selectedArr[2].split(':')[0]) * 60 + parseInt(this.data.selectedArr[2].split(':')[1]),
           //in progress: -1, in progress: 0, complete: 1, not completed but expired: 2;
           state: -1,
           joined: [myOpenId],
@@ -131,17 +132,37 @@ Page({
             data: {
               'groupid': _.push(that.data.groupId)
             },
-            success: res => { 
-              console.log(res) 
-              that.clear()
+            success: res => {
+              console.log(res)
             },
             fail: err => { console.log(err) }
           })
-          
+
+          db.collection("messages").add({
+            data: {
+              groupid: that.data.groupId,
+              restaurant: that.selectComponent('#search').data.inputValue,
+              image: that.data.resImage,
+              //managerId: myOpenId,
+              messageList: [],
+              time: app.formatDate(new Date())
+            }, success: res => {
+              console.log("chatgroup created")
+            },
+            fail: err => { console.log(err) }
+          })
+          wx.showToast({
+            title: '发起成功',
+            duration: 1000,
+            mask: false,
+          });
+          that.clear(); //成功之后清空数据（not working?）
         }
-        //this.clear(); //成功之后清空数据（not working?）
-      })//.then(this.clear())
+
+      })
+      //this.clear()
       //将taskid添加到userinfo的taskid array中
+
 
 
     }

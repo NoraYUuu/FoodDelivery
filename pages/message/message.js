@@ -1,4 +1,4 @@
-
+const app = getApp()
 const db = wx.cloud.database()
 
 Page({
@@ -49,23 +49,65 @@ Page({
 									reject(res)
 								}
 							})
-						},
-						)
+						})
+
+						const msg = await new Promise((resolve, reject) => {
+							db.collection("messages").where({ groupid: groupid[i] }).get({
+								success: res => {
+									//console.log(res)
+									resolve(res)
+								},
+								fail(res) {
+									reject(res)
+								}
+							})
+						})
 						//console.log(p.data)
 						let info = p.data;
+						let message = msg.data[0].messageList;
+						message = message[message.length - 1];
+						let last = {};
+						var content = '';
+						var time = '';
+						let now = app.formatDate(new Date());
+						let date = now.substr(0, 5);
+
+						if (message) {
+							if (message.type == "text") {
+								content = message.value;
+							} else if (message.type == "emoji") {
+								content = "[动画表情]"
+							} else {
+								content = "[图片]"
+							}
+							time = message.time
+						} else {
+							time = msg.data[0].time
+						}
+
+						if (time.substr(0, 5) < date) {
+							time = time.substr(0, 5)
+						} else {
+							time = time.substr(6)
+						}
+
+						last = { time: time, message: content }
+						console.log(last)
 						group.push({
 							groupId: info._id,
 							restaurant: info.restaurant,
 							photo: info.image,
 							managerId: info._openid,
-							joined: info.joined
+							joined: info.joined,
+							lastMsg: last
 						})
 						group2.push({
 							groupId: info._id,
 							restaurant: info.restaurant,
 							photo: info.image,
 							managerId: info._openid,
-							joined: info.joined
+							joined: info.joined,
+							lastMsg: last
 						})
 						//console.log(group)
 						//console.log(self.data.groups)

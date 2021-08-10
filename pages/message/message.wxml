@@ -24,9 +24,9 @@
                     <view class="tab_l">
                         <view class="tabs_12">
                             <view class="user_f">{{item.restaurant}}</view>
-                            <view class="user_msg">[动画表情]</view>
+                            <view class="user_msg">{{item.lastMsg.message}}</view>
                         </view>
-                        <view class="tab_r">20:47</view>
+                        <view class="tab_r">{{item.lastMsg.time}}</view>
                         <!-- 需改为最后一条消息的时间 -->
                     </view>
                 </view>

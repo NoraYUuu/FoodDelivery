@@ -4,7 +4,8 @@ var utils = require('../../utils/util.js'); */
 
 const app = getApp()
 // 获取数据库
-const DB = wx.cloud.database().collection("messages"); // 
+const db = wx.cloud.database();
+const DB = db.collection("messages"); // 
 
 Page({
   // 删除消息
@@ -107,20 +108,30 @@ Page({
     // 拿缓存数据
     var userInfo = wx.getStorageSync('userinfo');
     console.log(userInfo);
-    DB.add({
+    const _ = db.command;
+    console.log(_this.data.groupId);
+    DB.where({ groupid: _this.data.groupId }).update({
       data: {
-        avatarUrl: userInfo.avatarUrl, //头像
-        nickName: userInfo.nickName, //昵称
-        value: _this.data.user_value, //消息内容
-        groupid: _this.data.groupId,
-        time: app.formatDate(new Date()),
-        type: "text"
+        'messageList': _.push(
+          {
+            avatarUrl: userInfo.avatarUrl, //头像
+            nickName: userInfo.nickName, //昵称
+            value: _this.data.user_value, //消息内容
+            //groupid: _this.data.groupId,
+            time: app.formatDate(new Date()),
+            type: "text",
+            senderId: _this.data.info.openid
+          }
+        )
       },
       success(res) {
         console.log(res)
         _this.setData({
           user_value: ''
         })
+      },
+      fail(res) {
+        console.log(res)
       }
     })
   },
@@ -180,12 +191,13 @@ Page({
         let list = []
         for (var i = 0, len = allMsg.length; i < len; i++) {
           if (allMsg[i].groupid == groupid) {
-            list.push(allMsg[i])
+            list = allMsg[i].messageList;
+            break
           }
         }
         _this.setData({
           info_list: list,
-          into: allMsg[allMsg.length - 1]._id
+          //into: allMsg[allMsg.length - 1]._id
         })
         console.log(_this.data.info_list)
       },
@@ -219,14 +231,18 @@ Page({
           success: (res) => {
             console.log('上传成功', res)
             let imgUrl = res.fileID
-            DB.add({
+            const _ = db.command;
+            DB.where({ groupid: that.data.groupId }).update({
               data: {
-                avatarUrl: userInfo.avatarUrl,
-                nickName: userInfo.nickName,
-                image: imgUrl,
-                groupid: that.data.groupId,
-                time: app.formatDate(new Date()),
-                type: "image"
+                'messageList': _.push({
+                  avatarUrl: userInfo.avatarUrl,
+                  nickName: userInfo.nickName,
+                  image: imgUrl,
+                  //groupid: that.data.groupId,
+                  time: app.formatDate(new Date()),
+                  type: "image",
+                  senderId: that.data.info.openid
+                })
               },
               success(res) {
                 console.log('图片发送成功', res)
@@ -254,14 +270,18 @@ Page({
     var _this = this;
     // 拿缓存数据
     var userInfo = wx.getStorageSync('userinfo');
-    DB.add({
+    const _ = db.command;
+    DB.where({ groupid: _this.data.groupId }).update({
       data: {
-        avatarUrl: userInfo.avatarUrl, //头像
-        nickName: userInfo.nickName, //昵称
-        emoji: src, //消息内容
-        groupid: _this.data.groupId,
-        time: app.formatDate(new Date()),
-        type: "emoji"
+        'messageList': _.push({
+          avatarUrl: userInfo.avatarUrl, //头像
+          nickName: userInfo.nickName, //昵称
+          emoji: src, //消息内容
+          //groupid: _this.data.groupId,
+          time: app.formatDate(new Date()),
+          type: "emoji",
+          senderId: _this.data.info.openid
+        })
       },
       success(res) {
 
