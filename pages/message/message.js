@@ -92,7 +92,7 @@ Page({
 						}
 
 						last = { time: time, message: content }
-						console.log(last)
+						//console.log(last)
 						group.push({
 							groupId: info._id,
 							restaurant: info.restaurant,
